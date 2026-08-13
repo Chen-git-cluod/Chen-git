@@ -1,0 +1,163 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.InjectionPumpView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:hel="clr-namespace:Kinlo.GUI.Helpers"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignInstance vm:InjectionPumpViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="1200"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <cvt:SubtractConverter x:Key="SubtractConverter" />
+    </UserControl.Resources>
+    <Border
+        Grid.Row="0"
+        Grid.Column="2"
+        Padding="{StaticResource TitlePadding2}"
+        Background="{DynamicResource RegionBrush}"
+        CornerRadius="{DynamicResource MainCornerRadius}">
+        <StackPanel Orientation="Vertical">
+            <WrapPanel>
+                <hc:DateTimePicker
+                    Grid.Column="0"
+                    Width="160"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    hc:InfoElement.Title="{DynamicResource 开始时间}"
+                    SelectedDateTime="{Binding StartTime}"
+                    Style="{StaticResource DateTimePickerPlus}" />
+                <TextBlock
+                    Margin="1,0,1,7"
+                    VerticalAlignment="Bottom"
+                    Text="~" />
+                <hc:DateTimePicker
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="160"
+                    Margin="0,0,10,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    hc:InfoElement.Title="{DynamicResource 结束时间}"
+                    SelectedDateTime="{Binding EndTime}"
+                    Style="{StaticResource DateTimePickerPlus}" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock kc:LanguageResource.Key="选择注液泵" />
+                    <hc:CheckComboBox
+                        x:Name="pumpsCbox"
+                        Grid.Row="1"
+                        MinWidth="180"
+                        ItemsSource="{Binding Pumps}"
+                        ShowSelectAllButton="True" />
+                </Grid>
+                <hc:TextBox
+                    Margin="20,0,0,0"
+                    hc:InfoElement.Title="{DynamicResource 显示最大数量}"
+                    Text="{Binding DisyplayMax}" />
+                <Button
+                    Margin="20,0,0,0"
+                    VerticalAlignment="Bottom"
+                    hc:IconElement.Geometry="{StaticResource SearchGeometry}"
+                    Command="{s:Action QueryAsync}"
+                    CommandParameter="{Binding ElementName=pumpsCbox}"
+                    Content="{DynamicResource 统计}"
+                    Style="{StaticResource ButtonPrimary}" />
+            </WrapPanel>
+
+            <TabControl
+                Margin="0,0,0,0"
+                BorderThickness="0,0,1,0"
+                ItemsSource="{Binding InjectPumps}"
+                SelectedIndex="{Binding SelectPumpIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Style="{StaticResource TabControlSliding}"
+                TabStripPlacement="Right">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            Margin="0,20"
+                            VerticalAlignment="Center"
+                            FontSize="18"
+                            Text="{Binding PumpNo, StringFormat={}{0}号泵}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ScrollViewer Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource SubtractConverter}, ConverterParameter='150'}" VerticalScrollBarVisibility="Visible">
+                            <StackPanel
+                                Grid.Row="0"
+                                Margin="10,10,10,0"
+                                Orientation="Vertical">
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    Foreground="{StaticResource PrimaryBrush}"
+                                    Style="{StaticResource TextBlockTitleBold}"
+                                    Text="{Binding PumpNo, StringFormat={}{0}号泵信息}" />
+                                <ItemsControl ItemsSource="{Binding Charts}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="1" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="10,20,10,0" Orientation="Vertical">
+                                                <TextBlock
+                                                    Margin="0,0,0,-10"
+                                                    Style="{StaticResource TextBlockSubTitleBold}"
+                                                    Text="{Binding Id, StringFormat=图{0}}" />
+                                                <ItemsControl ItemsSource="{Binding SeriesOptions}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Margin="0,0,15,0" HorizontalAlignment="Right" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox
+                                                                Margin="10,0"
+                                                                Command="{s:Action SelectCurveCmd}"
+                                                                CommandParameter="{Binding .}"
+                                                                Content="{Binding Type}"
+                                                                IsChecked="{Binding IsChecked}" />
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <lvc:CartesianChart
+                                                    MinHeight="320"
+                                                    Margin="0"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    AnimationsSpeed="0"
+                                                    LegendPosition="Bottom"
+                                                    LegendTextPaint="{x:Static hel:Common.TextPaint}"
+                                                    Series="{Binding ChatSeries}"
+                                                    TooltipPosition="Right"
+                                                    TooltipTextPaint="{x:Static hel:Common.TextPaint}"
+                                                    XAxes="{Binding XAxes}"
+                                                    YAxes="{Binding YAxes}"
+                                                    ZoomMode="X" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </StackPanel>
+    </Border>
+</UserControl>

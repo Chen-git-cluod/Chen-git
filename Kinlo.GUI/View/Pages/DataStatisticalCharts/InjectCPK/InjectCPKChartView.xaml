@@ -1,0 +1,345 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.InjectCPKChartView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:hel="clr-namespace:Kinlo.GUI.Helpers"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <cvt:HandleValueConverter x:Key="HandleValueConverter" />
+    </UserControl.Resources>
+    <Border
+        Grid.Row="0"
+        Grid.Column="2"
+        Padding="{StaticResource TitlePadding2}"
+        Background="{DynamicResource RegionBrush}"
+        CornerRadius="{DynamicResource MainCornerRadius}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid
+                Grid.Row="0"
+                Margin="10,0,10,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70" />
+                    <RowDefinition Height="70" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Border
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,0,1,0" />
+                <Border
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,1,0,0" />
+
+                <WrapPanel Grid.Row="0" VerticalAlignment="Center">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBlockSubTitleBold}"
+                        Text="数据查询" />
+                    <TextBlock
+                        Margin="50,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="{DynamicResource 选择时间：}" />
+                    <hc:DateTimePicker
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Width="180"
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        hc:InfoElement.Title="{DynamicResource productHistory_InboundTime}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        SelectedDateTime="{Binding StartTime}"
+                        Style="{StaticResource DateTimePickerPlus}" />
+                    <hc:DateTimePicker
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="180"
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        hc:InfoElement.Title="~"
+                        hc:TitleElement.TitlePlacement="Left"
+                        SelectedDateTime="{Binding EndTime}"
+                        Style="{StaticResource DateTimePickerPlus}" />
+
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="6"
+                        Width="100"
+                        Margin="20,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        hc:IconElement.Geometry="{StaticResource SearchGeometry}"
+                        Command="{s:Action QueryCMD}"
+                        Content="{DynamicResource 查询}"
+                        IsDefault="True"
+                        IsEnabled="{Binding IsQueryFinish}"
+                        Style="{StaticResource ButtonPrimary}" />
+                    <TextBlock
+                        Margin="15,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Text="{Binding TotalCount, StringFormat=当前查询总数量：{0}个}" />
+                </WrapPanel>
+
+                <WrapPanel
+                    Grid.Column="1"
+                    Margin="60,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBlockSubTitleBold}"
+                        Text="参数设置" />
+                    <hc:TextBox
+                        Width="150"
+                        Margin="50,0,0,0"
+                        hc:TitleElement.Title="{DynamicResource 注液量上限：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        Text="{Binding UpperLimit}" />
+                    <hc:TextBox
+                        Width="150"
+                        Margin="20,0,0,0"
+                        hc:TitleElement.Title="{DynamicResource 注液量标准：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        Text="{Binding StandardValue}" />
+                    <hc:TextBox
+                        Width="150"
+                        Margin="20,0,20,0"
+                        hc:TitleElement.Title="{DynamicResource 注液量下限：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        Text="{Binding LowerLimit}" />
+
+                    <Button
+                        Width="100"
+                        Command="{s:Action GetLocalConfigCMD}"
+                        Content="{DynamicResource 同步本地设定}"
+                        Style="{StaticResource ButtonPrimary}" />
+                </WrapPanel>
+
+                <DockPanel
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBlockSubTitleBold}"
+                        Text="参数过滤" />
+                    <hc:ComboBox
+                        Width="180"
+                        Margin="50,0,0,0"
+                        hc:TitleElement.Title="类型："
+                        hc:TitleElement.TitlePlacement="Left"
+                        ItemsSource="{Binding GroupTypes}"
+                        SelectedValue="{Binding SelectedGroupType}" />
+                    <hc:TextBox
+                        Width="200"
+                        Margin="50,0,0,0"
+                        hc:TitleElement.Title="注液量有效范围："
+                        hc:TitleElement.TitlePlacement="Left"
+                        Text="{Binding EffectiveLower}" />
+                    <TextBlock Margin="5,6,5,0" Text="~" />
+                    <TextBox MinWidth="100" Text="{Binding EffectiveUpper}" />
+                    <hc:TextBox
+                        MinWidth="80"
+                        Margin="50,0,0,0"
+                        hc:TitleElement.Title="批次"
+                        hc:TitleElement.TitlePlacement="Left"
+                        Text="{Binding BathNo}" />
+                    <hc:TextBox
+                        MinWidth="120"
+                        Margin="0,0,0,0"
+                        hc:TitleElement.Title="，每批"
+                        hc:TitleElement.TitlePlacement="Left"
+                        Text="{Binding BathCount}" />
+                    <TextBlock VerticalAlignment="Center" Text="个" />
+                    <hc:ComboBox
+                        Width="160"
+                        Margin="50,0,0,0"
+                        hc:TitleElement.Title="方向："
+                        hc:TitleElement.TitlePlacement="Left"
+                        ItemsSource="{Binding BatchDirections}"
+                        SelectedValue="{Binding SelectBatchDirection}" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="6"
+                        Margin="20,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        kc:LanguageResource.Key="应用过滤参数"
+                        Command="{s:Action ApplyCmd}"
+                        IsDefault="True"
+                        IsEnabled="{Binding IsQueryFinish}"
+                        Style="{StaticResource ButtonSuccess}" />
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="6"
+                            Width="100"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            kc:LanguageResource.Key="第一批"
+                            Command="{s:Action FirstBatchCmd}"
+                            IsDefault="True"
+                            IsEnabled="{Binding IsQueryFinish}"
+                            Style="{StaticResource ButtonSuccess}" />
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="6"
+                            Width="80"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            hc:BorderElement.CornerRadius="4 0 0 4"
+                            hc:IconElement.Geometry="{StaticResource LeftGeometry}"
+                            hc:IconElement.Height="15"
+                            kc:LanguageResource.Key="上一批"
+                            Command="{s:Action PreviousBatchCmd}"
+                            IsDefault="True"
+                            IsEnabled="{Binding IsQueryFinish}"
+                            Style="{StaticResource ButtonPrimary}" />
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="6"
+                            Width="80"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            hc:BorderElement.CornerRadius="0 4 4 0"
+                            Command="{s:Action NextBatchCmd}"
+                            IsDefault="True"
+                            IsEnabled="{Binding IsQueryFinish}"
+                            Style="{StaticResource ButtonInfo}">
+                            <WrapPanel>
+                                <TextBlock kc:LanguageResource.Key="下一批" />
+                                <Path
+                                    Height="15"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Data="{StaticResource RightGeometry}"
+                                    Fill="White"
+                                    Stretch="Uniform" />
+                            </WrapPanel>
+                        </Button>
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="6"
+                            Width="100"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            kc:LanguageResource.Key="最后一批"
+                            Command="{s:Action LastBatchCmd}"
+                            IsDefault="True"
+                            IsEnabled="{Binding IsQueryFinish}"
+                            Style="{StaticResource ButtonSuccess}" />
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+
+            <ListView
+                Grid.Row="1"
+                Margin="0,0,0,0"
+                BorderThickness="0,0,0,0"
+                ItemsSource="{Binding InjectionCpks}"
+                Style="{StaticResource ListBoxCustom}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="10"
+                            Padding="10,20,10,0"
+                            Background="{StaticResource MainContentBackgroundBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <ToggleButton
+                                    Margin="0,-20,0,0"
+                                    HorizontalAlignment="Right"
+                                    Command="{s:Action ShowSingleChartCmd}"
+                                    CommandParameter="{Binding .}"
+                                    Content="&#xe611;"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="18"
+                                    Style="{StaticResource ToggleButtonCustom}" />
+                                <TextBlock HorizontalAlignment="Center" FontSize="15">
+                                    <Run Text="{Binding InjectionNeedleNo, StringFormat={}{0}号}" />
+                                    <Run Text="{Binding SelectedGroupType}" />
+                                    <Run Text="    " />
+                                    <Run Text="{Binding Cpk, StringFormat=CPK：{0:F3}}" />
+                                    <Run Text="    " />
+                                    <Run Text="{Binding Average, StringFormat=平均值：{0:F3}}" />
+                                    <Run Text="    " />
+                                    <Run Text="{Binding StdDev, StringFormat=标准差：{0:F3}}" />
+                                </TextBlock>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0,6,0,0"
+                                    HorizontalAlignment="Center"
+                                    FontSize="13">
+                                    <Run Text="{Binding Start, StringFormat=当前统计从{0}开始，}" />
+                                    <Run Text="{Binding Count, StringFormat=共{0}条}" />
+                                    <Run Text="     " />
+                                    <Run Text="{Binding ValidCount, StringFormat=有效数据{0}个，}" />
+                                    <Run Text="{Binding TotalCount, StringFormat=总数据{0}个}" />
+                                </TextBlock>
+                                <lvc:CartesianChart
+                                    Grid.Row="2"
+                                    MinHeight="260"
+                                    Margin="5,5,5,5"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    AnimationsSpeed="0"
+                                    LegendPosition="Bottom"
+                                    LegendTextPaint="{x:Static hel:Common.TextPaint}"
+                                    Series="{Binding ChatSeries}"
+                                    TooltipPosition="Right"
+                                    TooltipTextPaint="{x:Static hel:Common.TextPaint}"
+                                    XAxes="{Binding XAxes}"
+                                    YAxes="{Binding YAxes}"
+                                    ZoomMode="X" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Border>
+</UserControl>

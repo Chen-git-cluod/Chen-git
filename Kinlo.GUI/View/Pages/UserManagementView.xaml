@@ -1,0 +1,124 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.UserManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignInstance vm:UserManagementViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <cvt:LevelToRoleNameConverter x:Key="LevelToRoleNameConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource TitleSpace}" />
+            <RowDefinition Height="{StaticResource MainSpace}" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Border
+            Grid.ColumnSpan="5"
+            Padding="{StaticResource TitlePadding1}"
+            Background="{DynamicResource RegionBrush}"
+            CornerRadius="{DynamicResource MainCornerRadius}">
+            <Grid>
+                <TextBlock
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{DynamicResource TextBlockTitleBold}"
+                    Text="{DynamicResource 用户管理}" />
+                <StackPanel
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+                    <Button
+                        Width="100"
+                        Height="30"
+                        Margin="0,0,0,0"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{s:Action CreateUserCMD}"
+                        Style="{StaticResource ButtonSuccess}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,8,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="/Font/#iconfont"
+                                FontSize="16"
+                                Text="&#xe62b;" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Text="{DynamicResource 新建}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Border
+            Grid.Row="2"
+            Grid.ColumnSpan="5"
+            Padding="{StaticResource DefaultInputPadding}"
+            Background="{DynamicResource RegionBrush}"
+            CornerRadius="{DynamicResource MainCornerRadius}">
+            <DataGrid
+                x:Name="dataGrid"
+                AutoGenerateColumns="False"
+                Background="Transparent"
+                BorderThickness="0"
+                ColumnWidth="auto"
+                IsReadOnly="True"
+                ItemsSource="{Binding UsersStatus.LocalUsers}"
+                RowStyle="{StaticResource MainDisplayDataGridRowStyle}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Account}" Header="{DynamicResource 帐号}" />
+                    <DataGridTextColumn Binding="{Binding Name}" Header="{DynamicResource 姓名}" />
+                    <DataGridTextColumn Header="{DynamicResource 部门}">
+                        <DataGridTextColumn.Binding>
+                            <MultiBinding Converter="{StaticResource LevelToRoleNameConverter}">
+                                <Binding Mode="OneWay" Path="Level" />
+                                <Binding
+                                    Mode="OneWay"
+                                    Path="DataContext.RoleConfigLazy.Value"
+                                    RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                            </MultiBinding>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Tel}" Header="{DynamicResource 电话}" />
+                    <DataGridTextColumn Binding="{Binding LoginTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Header="{DynamicResource 上次登陆时间}" />
+                    <DataGridTextColumn Binding="{Binding RegisterTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Header="{DynamicResource 注册时间}" />
+                    <DataGridTextColumn Binding="{Binding UpdateTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Header="{DynamicResource 修改时间}" />
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        hc:BorderElement.CornerRadius="4 0 0 4"
+                                        Command="{s:Action UpeateUserCMD}"
+                                        CommandParameter="{Binding}"
+                                        Content="{DynamicResource 编辑}"
+                                        Style="{StaticResource ButtonInfo}" />
+                                    <Button
+                                        hc:BorderElement.CornerRadius="0 4 4 0"
+                                        Command="{s:Action DeleteUserCMD}"
+                                        CommandParameter="{Binding}"
+                                        Content="{DynamicResource 删除}"
+                                        Style="{StaticResource ButtonDanger}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</UserControl>

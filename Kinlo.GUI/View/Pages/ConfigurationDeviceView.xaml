@@ -1,0 +1,167 @@
+﻿<UserControl
+   x:Class="Kinlo.GUI.View.ConfigurationDeviceView"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:hc="https://handyorg.github.io/handycontrol"
+   xmlns:local="clr-namespace:Kinlo.GUI.View"
+   xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:s="https://github.com/canton7/Stylet"
+   xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+   d:DataContext="{d:DesignInstance vm:ConfigurationDeviceViewModel}"
+   d:DesignHeight="450"
+   d:DesignWidth="1600"
+   mc:Ignorable="d"
+>
+   <UserControl.Resources>
+      <cvt:OnlineToBrushConverter x:Key="OnlineToBrushConverter" />
+   </UserControl.Resources>
+   <Grid Margin="0">
+      <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="1.3*" />
+         <ColumnDefinition Width="{StaticResource MainSpace}" />
+         <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+      <Border Grid.Row="0" Background="{DynamicResource RegionBrush}" CornerRadius="{DynamicResource MainCornerRadius}">
+         <Grid Margin="15">
+            <Grid.RowDefinitions>
+               <RowDefinition Height="35" />
+               <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock
+               Margin="10,0,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Style="{DynamicResource TextBlockTitleBold}"
+               Text="{DynamicResource 设备列表}"
+            />
+            <Button
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Command="{s:Action AddDeviceCMD}"
+               Content="{DynamicResource 新建设备}"
+               Style="{StaticResource ButtonPrimary}"
+            />
+            <ListView
+               Grid.Row="1"
+               Background="Transparent"
+               BorderThickness="0"
+               ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+               ItemsSource="{Binding Devices.DeviceList}"
+               MouseDoubleClick="{s:Action DeviceCMD_MouseDoubleClick}"
+               PreviewMouseUp="{s:Action ListView_PreviewMouseUp}"
+            >
+               <ListView.ContextMenu>
+                  <ContextMenu>
+                     <MenuItem Command="{s:Action AddDeviceCMD}" Header="{DynamicResource 新建}" />
+                     <MenuItem
+                        Command="{s:Action EditDeviceCMD}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                        Header="{DynamicResource 编辑}"
+                     />
+                     <MenuItem
+                        Command="{s:Action EnableDeviceCMD}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                        Header="{DynamicResource 启用}"
+                     />
+                     <MenuItem
+                        Command="{s:Action DisabledDeviceCMD}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                        Header="{DynamicResource 禁用}"
+                     />
+                     <MenuItem
+                        Command="{s:Action DeleteDeviceCMD}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                        Header="{DynamicResource 删除}"
+                     />
+                  </ContextMenu>
+               </ListView.ContextMenu>
+               <ListView.View>
+                  <GridView>
+                     <GridViewColumn Width="Auto" Header="{DynamicResource 状态}">
+                        <GridViewColumn.CellTemplate>
+                           <DataTemplate>
+                              <Grid>
+                                 <Border
+                                    Width="16"
+                                    Height="16"
+                                    Background="{Binding IsOnline, Converter={StaticResource OnlineToBrushConverter}}"
+                                    CornerRadius="{DynamicResource MainCornerRadius}"
+                                    Visibility="{Binding IsEnable, Converter={StaticResource Boolean2VisibilityConverter}}"
+                                 />
+                                 <TextBlock
+                                    Foreground="Red"
+                                    Text="{DynamicResource 禁用}"
+                                    Visibility="{Binding IsEnable, Converter={StaticResource Boolean2VisibilityReConverter}}"
+                                 />
+                              </Grid>
+                           </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                     </GridViewColumn>
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ProcessesType}" Header="{DynamicResource 工序}" />
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Index}" Header="{DynamicResource 设备索引}" />
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ServiceName}" Header="{DynamicResource 服务名}" />
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ConnectType, Mode=OneWay}" Header="{DynamicResource 连接类型}" />
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Communication}" Header="{DynamicResource 设备通讯类型}" />
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding HardwareType}" Header="{DynamicResource 设备型号}" />
+
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding IPCOM}" Header="{DynamicResource IP或COM}" />
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Port}" Header="{DynamicResource 端口}" />
+
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding IsCustomBoot}" Header="{DynamicResource 自定义启动}" />
+
+                     <!--<GridViewColumn
+                            Width="Auto"
+                            DisplayMemberBinding="{Binding ConnectionNumber}"
+                            Header="连接数" />-->
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding PingTime}" Header="{DynamicResource Ping时间(ms)}" />
+                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ICMPResult}" Header="{DynamicResource Ping结果}" />
+                  </GridView>
+               </ListView.View>
+            </ListView>
+         </Grid>
+      </Border>
+      <Grid Grid.Column="2">
+         <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="{StaticResource MainSpace}" />
+            <RowDefinition />
+         </Grid.RowDefinitions>
+         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+         <Border Grid.Row="0" Background="{DynamicResource RegionBrush}" CornerRadius="{DynamicResource MainCornerRadius}">
+            <Grid>
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="auto" />
+                  <RowDefinition />
+               </Grid.RowDefinitions>
+               <DockPanel Margin="30 20 20 0">
+                  <TextBlock Text="设备文档" Style="{StaticResource TextBlockTitleBold}" HorizontalAlignment="Left" />
+                  <Button
+                     Grid.Column="3"
+                     Width="180"
+                     Margin="5 0 0 0"
+                     HorizontalAlignment="Right"
+                     Command="{s:Action OpenSelfManual}"
+                     kc:LanguageResource.Key="本软件说明书"
+                     Style="{StaticResource ButtonInfo}"
+                  />
+               </DockPanel>
+               <ContentControl Grid.Row="1" s:View.Model="{Binding DeviceDocumentVM}" />
+            </Grid>
+         </Border>
+         <Border Grid.Row="2" Background="{DynamicResource RegionBrush}" CornerRadius="{DynamicResource MainCornerRadius}">
+            <Grid>
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="auto" />
+                  <RowDefinition />
+               </Grid.RowDefinitions>
+               <TextBlock Text="设备操作" Margin="30 20 0 0" Style="{StaticResource TextBlockTitleBold}" HorizontalAlignment="Left" />
+               <ContentControl Grid.Row="1" Margin="20" s:View.Model="{Binding DeviceHanderVM}" />
+            </Grid>
+         </Border>
+      </Grid>
+   </Grid>
+</UserControl>

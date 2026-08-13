@@ -1,0 +1,162 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.MesResendView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignData vm:MesResendViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+>
+    <Border Grid.Row="0" Margin="0,0,0,0" Background="{DynamicResource RegionBrush}" CornerRadius="{DynamicResource MainCornerRadius}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="15,20,15,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <WrapPanel VerticalAlignment="Bottom">
+                    <hc:DateTimePicker
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Width="180"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        hc:InfoElement.Title="{DynamicResource 开始时间}"
+                        hc:TitleElement.TitlePlacement="Top"
+                        SelectedDateTime="{Binding StartTime}"
+                        Style="{StaticResource DateTimePickerPlus}"
+                    />
+                    <TextBlock Margin="2,0,2,7" VerticalAlignment="Bottom" Text="~" />
+                    <hc:DateTimePicker
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="180"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        hc:InfoElement.Title="{DynamicResource 结束时间}"
+                        hc:TitleElement.TitlePlacement="Top"
+                        SelectedDateTime="{Binding EndTime}"
+                        Style="{StaticResource DateTimePickerPlus}"
+                    />
+                </WrapPanel>
+                <hc:TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    MaxHeight="80"
+                    Margin="5,0,5,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    hc:InfoElement.Title="{DynamicResource 输入条码（单条码支持模糊查询；多条码须完整匹配，支持换行、逗号或混合输入）}"
+                    hc:TitleElement.TitlePlacement="Top"
+                    AcceptsReturn="True"
+                    Style="{StaticResource TextBoxExtend}"
+                    Text="{Binding Barcode, UpdateSourceTrigger=LostFocus}"
+                    VerticalScrollBarVisibility="Auto"
+                />
+                <WrapPanel Grid.Column="2" VerticalAlignment="Bottom">
+                    <hc:ComboBox
+                        MinWidth="100"
+                        hc:TitleElement.Title="状态"
+                        ItemsSource="{Binding QueryMesResendTypeEnums}"
+                        SelectedItem="{Binding SelectStatus}"
+                    />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="6"
+                        Width="80"
+                        Margin="30,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        hc:BorderElement.CornerRadius="3 0 0 3"
+                        hc:IconElement.Geometry="{StaticResource SearchGeometry}"
+                        Command="{s:Action QueryCMD}"
+                        Content="{DynamicResource 查询}"
+                        IsDefault="True"
+                        Style="{StaticResource ButtonPrimary}"
+                    />
+
+                    <hc:TextBox
+                        Margin="20,0,0,0"
+                        hc:TitleElement.Title="上传间隔(ms)"
+                        Text="{Binding IntervalTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
+                    <hc:TextBox
+                        Margin="10,0,0,0"
+                        hc:TitleElement.Title="单周期上传最大数量"
+                        Text="{Binding SendCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="7"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        hc:IconElement.Geometry="{StaticResource RotateRightGeometry}"
+                        kc:LanguageResource.Key="手动启动补传扫描"
+                        Command="{s:Action MaualStartResendCmd}"
+                        Style="{StaticResource ButtonSuccess}"
+                    />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="7"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        hc:IconElement.Geometry="{StaticResource CloseGeometry}"
+                        Command="{s:Action StopResendCmd}"
+                        Content="中止补传中任务"
+                        Style="{StaticResource ButtonDanger}"
+                    />
+                </WrapPanel>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
+                    <RowDefinition Height="38" />
+                </Grid.RowDefinitions>
+
+                <!--<ContentControl
+                    Grid.Row="1"
+                    Margin="10,0,10,0"
+                    Content="{Binding ShowGridData}" />-->
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource 总计}" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding TotalCount}" />
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource 条}" />
+                    <hc:TextBox
+                        Margin="20,0,0,0"
+                        hc:TitleElement.Title="{DynamicResource 每页显示}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        Text="{Binding DataCountPerPage, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                    />
+                    <TextBlock Margin="5,0,20,0" VerticalAlignment="Center" Text="{DynamicResource 条}" />
+                    <hc:Pagination
+                        HorizontalAlignment="Center"
+                        DataCountPerPage="{Binding DataCountPerPage}"
+                        IsJumpEnabled="True"
+                        MaxPageCount="{Binding TotalPage}"
+                        MaxPageInterval="4"
+                        PageUpdated="{s:Action PaginationPageUpdatedCMD}"
+                    />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

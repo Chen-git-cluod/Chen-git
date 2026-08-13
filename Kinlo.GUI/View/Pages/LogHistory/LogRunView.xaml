@@ -1,0 +1,89 @@
+﻿<ListView
+    x:Class="Kinlo.GUI.View.LogRunView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="Transparent"
+    BorderThickness="0"
+    IsEnabled="True"
+    ItemContainerStyle="{StaticResource LogListViewItemStyle}"
+    ItemsSource="{Binding Logs}"
+    VirtualizingStackPanel.IsVirtualizing="True"
+    VirtualizingStackPanel.VirtualizationMode="Recycling"
+    mc:Ignorable="d"
+>
+    <ListView.View>
+        <GridView>
+            <GridView.Columns>
+                <GridViewColumn Width="35">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="17"
+                                    Foreground="Red"
+                                    Text="&#xe724;"
+                                    Visibility="{Binding ErrVisibility}"
+                                />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="15"
+                                    Foreground="Orange"
+                                    Text="&#xe6aa;"
+                                    Visibility="{Binding WarningVisibility}"
+                                />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="17"
+                                    Foreground="{DynamicResource SuccessBrush}"
+                                    Text="&#xe730;"
+                                    Visibility="{Binding SuccessVisibility}"
+                                />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="17"
+                                    Foreground="{DynamicResource SecondaryBorderBrush}"
+                                    Text="&#xe634;"
+                                    Visibility="{Binding MessageVisibility}"
+                                />
+                            </Grid>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn Width="125" DisplayMemberBinding="{Binding Time}" Header="{DynamicResource 时间}" />
+                <GridViewColumn Header="{DynamicResource 信息}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <hc:SimpleText
+                                MinWidth="1500"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=Foreground}"
+                                Text="{Binding Message}"
+                                TextWrapping="Wrap"
+                            >
+                                <hc:SimpleText.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Click="CopyLogMessage_Click" Header="{DynamicResource 复制}" />
+                                    </ContextMenu>
+                                </hc:SimpleText.ContextMenu>
+                            </hc:SimpleText>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+            </GridView.Columns>
+        </GridView>
+    </ListView.View>
+</ListView>

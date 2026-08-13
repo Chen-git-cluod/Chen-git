@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+      <TargetFramework>net8.0-windows7.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <UseWPF>true</UseWPF>
+      <!--"编译时" 是否还原Nuget包-->
+      <RestoreDuringBuild>false</RestoreDuringBuild>
+      <!--"发布时" 是否还原Nuget包-->
+      <RestoreOnPublish>false</RestoreOnPublish>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+      <EnablePackageValidation>false</EnablePackageValidation>
+      <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+   </PropertyGroup>
+
+   <ItemGroup>
+      <PackageReference Include="log4net" Version="3.3.0" />
+   </ItemGroup>
+</Project>

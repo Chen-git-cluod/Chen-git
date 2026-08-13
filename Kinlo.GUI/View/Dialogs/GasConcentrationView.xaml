@@ -1,0 +1,95 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.GasConcentrationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Title="气体浓度记录"
+    Width="750"
+    Height="600"
+    d:DataContext="{d:DesignInstance vm:GasConcentrationViewModel}"
+    mc:Ignorable="d"
+>
+    <Grid Margin="20,10,20,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <WrapPanel>
+            <hc:DateTimePicker
+                Grid.Row="1"
+                Grid.Column="0"
+                Width="180"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                hc:InfoElement.Title="{DynamicResource productHistory_InboundTime}"
+                hc:TitleElement.TitlePlacement="Left"
+                SelectedDateTime="{Binding StartTime}"
+                Style="{StaticResource DateTimePickerPlus}"
+            />
+            <hc:DateTimePicker
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="180"
+                Margin="5,0,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                hc:InfoElement.Title="~"
+                hc:TitleElement.TitlePlacement="Left"
+                SelectedDateTime="{Binding EndTime}"
+                Style="{StaticResource DateTimePickerPlus}"
+            />
+            <hc:ComboBox
+                Width="160"
+                Margin="20,0"
+                hc:TitleElement.Title="{DynamicResource 位置}"
+                hc:TitleElement.TitlePlacement="Left"
+                ItemsSource="{Binding Positions}"
+                SelectedValue="{Binding SelectedPosition}"
+            />
+            <Button
+                Grid.Row="1"
+                Grid.Column="6"
+                Width="80"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                hc:BorderElement.CornerRadius="3 0 0 3"
+                hc:IconElement.Geometry="{StaticResource SearchGeometry}"
+                Command="{s:Action QueryCMD}"
+                Content="{DynamicResource 查询}"
+                IsDefault="True"
+                Style="{StaticResource ButtonPrimary}"
+            />
+
+            <!--<Button
+            Grid.Row="1"
+            Grid.Column="7"
+            Width="80"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            hc:BorderElement.CornerRadius="0 3 3 0"
+            hc:IconElement.Geometry="{StaticResource DownloadGeometry}"
+            Command="{s:Action ExportExcelCMD}"
+            Content="{DynamicResource 导出}"
+            Style="{StaticResource ButtonSuccess}" />-->
+        </WrapPanel>
+        <ListView Grid.Row="1" Margin="0,20,0,0" ItemsSource="{Binding GasConcentratios}" Style="{StaticResource ListView.Small}">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn DisplayMemberBinding="{Binding RowNumber}" Header="{DynamicResource 序}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Position}" Header="{DynamicResource 位置}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Concentration}" Header="{DynamicResource 浓度值}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding CreateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Header="{DynamicResource 时间}" />
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

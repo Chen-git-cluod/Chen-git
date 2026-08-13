@@ -1,0 +1,390 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.ManualRefillView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Title="{DynamicResource 补液或复投}"
+    Width="720"
+    d:DataContext="{d:DesignInstance vm:ManualRefillViewModel}"
+    Background="{DynamicResource RegionBrush}"
+    SizeToContent="Height"
+    mc:Ignorable="d"
+>
+    <Window.Resources>
+        <cvt:ResultToBrushConverter x:Key="ResultToBrushConverter" />
+        <cvt:ResultToCollectMultiConverter x:Key="ResultToCollectMultiConverter" />
+        <cvt:ResultInfoToStringMultiConverter x:Key="ResultInfoToStringMultiConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="30,20">
+            <hc:TextBox
+                Grid.Row="2"
+                Height="45"
+                Margin="0,0,0,5"
+                VerticalAlignment="Center"
+                hc:TitleElement.Title="{DynamicResource 条码}"
+                hc:TitleElement.TitlePlacement="Left"
+                FontSize="18"
+                IsReadOnly="True"
+                Text="{Binding MainBattery.Barcode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            />
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Command="{s:Action ManualInputCmd}"
+                    Content="{DynamicResource 手动输入条码}"
+                    Style="{StaticResource ButtonSuccess}"
+                />
+                <Button
+                    Grid.Column="1"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Command="{s:Action ClearBatteryCmd}"
+                    Content="{DynamicResource 清除电池}"
+                    Style="{StaticResource ButtonDanger}"
+                />
+            </StackPanel>
+        </StackPanel>
+        <TabControl
+            Grid.Row="1"
+            BorderThickness="0"
+            SelectedIndex="{Binding TabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Style="{StaticResource TabControlSliding}"
+        >
+            <TabItem Width="150" Header="{DynamicResource 补液}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="45" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Margin="30,15,30,0">
+                        <hc:TextBox
+                            Grid.Row="4"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 注液量范围}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.InjectionVolumeRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <hc:TextBox
+                            Grid.Row="3"
+                            Grid.Column="2"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 保液量}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.TotalInjectionVolume, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <hc:TextBox
+                            Grid.Row="3"
+                            Grid.Column="2"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 保液量偏差}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.TotalInjectionVolumeDeviation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <hc:TextBox
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 干重}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.NetWeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <hc:TextBox
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 后称重量}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.AfterWeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                        <hc:TextBox
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 首注结果}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.FirstInjectResult, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                        <hc:TextBox
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 回流称重}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.AutoRefillWeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                        <hc:TextBox
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 回流补液结果}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.AutoRefillResult, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <hc:TextBox
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Margin="0,0,0,5"
+                            hc:TitleElement.Title="{DynamicResource 手动补液结果}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            hc:TitleElement.TitleWidth="100"
+                            IsReadOnly="True"
+                            Text="{Binding MainBattery.ManualRefillResult, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <hc:TextBox
+                                Margin="0,0,0,0"
+                                hc:TitleElement.Title="{DynamicResource 补液称重量}"
+                                hc:TitleElement.TitlePlacement="Left"
+                                hc:TitleElement.TitleWidth="100"
+                                IsReadOnly="True"
+                                Text="{Binding MainBattery.ReplenishWeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            />
+                            <ToggleButton
+                                x:Name="byCheck"
+                                Grid.Column="1"
+                                Margin="10,0,0,0"
+                                Content="{DynamicResource 输入重量}"
+                                IsEnabled="True"
+                                Style="{StaticResource ToggleButtonPrimary}"
+                            />
+                        </Grid>
+
+                        <Border
+                            Width="340"
+                            Margin="18,0,0,0"
+                            Padding="15"
+                            Background="White"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="0"
+                            CornerRadius="5"
+                            Effect="{StaticResource EffectShadow3}"
+                            Visibility="{Binding ElementName=byCheck, Path=IsChecked, Converter={StaticResource Boolean2VisibilityConverter}}"
+                        >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <hc:TextBox
+                                    Grid.Row="0"
+                                    Margin="0,0,0,0"
+                                    VerticalAlignment="Center"
+                                    hc:TitleElement.Title="{DynamicResource 输入补液称重量}"
+                                    hc:TitleElement.TitlePlacement="Left"
+                                    hc:TitleElement.TitleWidth="100"
+                                    Text="{Binding ReplenishWeight, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                />
+
+                                <ToggleButton
+                                    Grid.Column="1"
+                                    Width="50"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    hc:BorderElement.CornerRadius="4 0 0 4"
+                                    Command="{s:Action ComputeCMD}"
+                                    Content="{DynamicResource 确定}"
+                                    Style="{StaticResource ToggleButtonInfo}"
+                                />
+                                <ToggleButton
+                                    Grid.Column="2"
+                                    Width="50"
+                                    Margin="0,0,0,0"
+                                    VerticalAlignment="Center"
+                                    hc:BorderElement.CornerRadius="0 4 4 0"
+                                    Content="{DynamicResource 关闭}"
+                                    IsChecked="{Binding ElementName=byCheck, Path=IsChecked}"
+                                    Style="{StaticResource ToggleButtonDanger}"
+                                />
+                            </Grid>
+                        </Border>
+
+                        <TextBlock Margin="0,15,0,0" HorizontalAlignment="Left">
+                            <Run FontSize="15" Text="{DynamicResource 最终注液结果}" />
+                            <Run FontSize="15" Text="：" />
+                            <Run
+                                FontSize="20"
+                                Foreground="{Binding MainBattery.InjectResult, Converter={StaticResource ResultToBrushConverter}}"
+                                Text="{Binding MainBattery.InjectResult, Mode=OneWay}"
+                            />
+                        </TextBlock>
+                        <TextBlock Margin="0,10" HorizontalAlignment="Left">
+                            <Run FontSize="15" Text="{DynamicResource 判定}" />
+                            <Run FontSize="15" Text="：" />
+                            <Run
+                                FontSize="20"
+                                Foreground="{Binding MainBattery.FinalStatus, Converter={StaticResource ResultToBrushConverter}}"
+                                Text="{Binding MainBattery.FinalStatus, Mode=OneWay}"
+                            />
+                        </TextBlock>
+                        <TextBlock Margin="0,0,0,15" HorizontalAlignment="Left">
+                            <Run FontSize="15" Text="{DynamicResource MES出站结果}" />
+                            <Run FontSize="15" Text="：" />
+                            <Run
+                                FontSize="20"
+                                Foreground="{Binding MainBattery.MesOutputStatus, Converter={StaticResource ResultToBrushConverter}}"
+                                Text="{Binding MainBattery.MesOutputStatus, Mode=OneWay}"
+                            />
+                        </TextBlock>
+                    </StackPanel>
+                    <Border
+                        Grid.Column="1"
+                        Margin="0,15,20,15"
+                        Padding="15"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                    >
+                        <StackPanel>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Foreground="{DynamicResource PrimaryBrush}"
+                                Style="{DynamicResource TextBlockTitleBold}"
+                                Text="上一个补液电池信息："
+                            />
+                            <TextBlock Margin="0,10,0,0" FontSize="15" Text="{Binding lastBattryText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                    <TextBlock
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="50"
+                        Opacity=".5"
+                        Style="{DynamicResource TextBlockDefaultDanger}"
+                        Text="{Binding CurrentTime}"
+                    />
+                    <Rectangle Grid.Row="1" Grid.ColumnSpan="2" Height="1" VerticalAlignment="Top" Fill="{DynamicResource BorderBrush}" />
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="20,0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <hc:TextBox
+                            Grid.Row="0"
+                            Width="110"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:TitleElement.Title="{DynamicResource 条码长度}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding BarcodeLength, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        />
+                        <hc:TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="20,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:TitleElement.Title="{DynamicResource 转移数据时间(秒)}"
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding ClearTime, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        />
+                        <CheckBox
+                            Grid.Column="3"
+                            Margin="30,0,10,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Content="补液称交互"
+                            IsChecked="{Binding IsHasReInjectionScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                        <CheckBox
+                            Grid.Column="4"
+                            Margin="10,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Content="PLC交互"
+                            IsChecked="{Binding IsHasPlc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                        <CheckBox
+                            Grid.Column="5"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Content="补液泵交互"
+                            IsChecked="{Binding IsHasPump, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Width="150" Header="补数据" IsEnabled="False">
+                <Grid Margin="30,15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition MinHeight="300" />
+                    </Grid.RowDefinitions>
+                    <Grid VerticalAlignment="Center">
+                        <!--<hc:DateTimePicker
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Width="320"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:InfoElement.Title="取基础数据数量开始时间"
+                            hc:TitleElement.TitlePlacement="Left"
+                            SelectedDateTime="{Binding StartTime}"
+                            Style="{StaticResource DateTimePickerPlus}" />-->
+                        <hc:TextBox
+                            Height="25"
+                            HorizontalAlignment="Right"
+                            hc:TitleElement.Title="基础资源数据数量："
+                            hc:TitleElement.TitlePlacement="Left"
+                            IsReadOnly="True"
+                            Text="{Binding Count}"
+                        />
+                    </Grid>
+                    <TextBlock Grid.Row="1" Margin="0,40,0,0" HorizontalAlignment="Center" FontSize="22" Text="{Binding BatteryText}" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

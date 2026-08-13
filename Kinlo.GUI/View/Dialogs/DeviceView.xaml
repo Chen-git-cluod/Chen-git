@@ -1,0 +1,117 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.DeviceView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Title="{tools:ResourceBinding Title}"
+    Width="600"
+    d:DataContext="{d:DesignInstance vm:DeviceViewModel}"
+    Background="{DynamicResource RegionBrush}"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <GridLength x:Key="TitleWidth">90</GridLength>
+        <cvt:IPAddressConverter x:Key="IPAddressConverter" />
+        <cvt:ProcessesTypeToVisibilityConverter x:Key="ProcessesTypeToVisibilityConverter" />
+    </Window.Resources>
+    <StackPanel Margin="{StaticResource ControlPadding}">
+        <hc:ComboBox
+            Height="25"
+            Margin="0,10"
+            hc:TitleElement.Title="{DynamicResource 选择服务：}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+            ItemsSource="{Binding ServiceItems}"
+            Text="{Binding DeviceClientCopy.ServiceName}" />
+        <hc:ComboBox
+            Height="25"
+            Margin="0,10"
+            hc:TitleElement.Title="{DynamicResource 工序类型：}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+            ItemsSource="{Binding Source={StaticResource ProcessesTypeEnum}}"
+            SelectedValue="{Binding DeviceClientCopy.ProcessesType}" />
+        <hc:ComboBox
+            Height="25"
+            Margin="0,10"
+            hc:InfoElement.Placeholder="dsf"
+            hc:TitleElement.Title="{DynamicResource 连接类型：}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+            ItemsSource="{Binding Source={StaticResource ConnectTypeEnum}}"
+            SelectedValue="{Binding DeviceClientCopy.ConnectType}" />
+
+        <hc:ComboBox
+            Height="25"
+            Margin="0,10"
+            hc:TitleElement.Title="{DynamicResource 设备通信类型：}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+            ItemsSource="{Binding Source={StaticResource CommunicationEnum}}"
+            SelectedValue="{Binding DeviceClientCopy.Communication}" />
+        <hc:ComboBox
+            Height="25"
+            Margin="0,10"
+            hc:TitleElement.Title="{DynamicResource 设备型号：}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+            ItemsSource="{Binding Source={StaticResource HardwareTypeEnum}}"
+            SelectedValue="{Binding DeviceClientCopy.HardwareType}" />
+        <hc:TextBox
+            Height="25"
+            Margin="0,10"
+            hc:InfoElement.Placeholder="(生成多条范例：192.168.1.80,4 在逗号后指定条数)"
+            hc:Poptip.Content="生成多条范例：192.168.1.80,4 在逗号后指定条数；"
+            hc:TitleElement.Title="{DynamicResource IP或COM：}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+            Text="{Binding DeviceClientCopy.IPCOM}" />
+
+        <UniformGrid Columns="2">
+            <hc:TextBox
+                Height="25"
+                Margin="0,10,30,10"
+                hc:InfoElement.Placeholder="例：10001,10 在逗号后指定条数；"
+                hc:Poptip.Content="生成多条范例：10001,10 在逗号后指定条数；"
+                hc:TitleElement.Title="{DynamicResource 端口/波特率：}"
+                hc:TitleElement.TitlePlacement="Left"
+                hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                Text="{Binding Ports}" />
+            <hc:TextBox
+                Height="25"
+                Margin="0,10,0,10"
+                hc:TitleElement.Title="{DynamicResource 超时时间(ms)：}"
+                hc:TitleElement.TitlePlacement="Left"
+                hc:TitleElement.TitleWidth="100"
+                Text="{Binding DeviceClientCopy.OutTime}" />
+        </UniformGrid>
+        <WrapPanel Margin="0,10" HorizontalAlignment="Right">
+            <CheckBox
+                Grid.Column="2"
+                Margin="30,0,0,0"
+                Content="{DynamicResource 自定义启动}"
+                IsChecked="{Binding DeviceClientCopy.IsCustomBoot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Style="{StaticResource ToggleButtonSwitch.Small}" />
+            <CheckBox
+                Grid.Column="2"
+                Margin="30,0,0,0"
+                Content="{DynamicResource 启用设备}"
+                IsChecked="{Binding DeviceClientCopy.IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Style="{StaticResource ToggleButtonSwitch.Small}" />
+        </WrapPanel>
+        <Button
+            Width="150"
+            Margin="0,20,0,0"
+            Command="{s:Action ConfirmCMD}"
+            Content="{DynamicResource 确定}"
+            Style="{StaticResource ButtonSuccess}" />
+    </StackPanel>
+</Window>

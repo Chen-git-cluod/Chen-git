@@ -1,0 +1,80 @@
+<Project>
+   <UsingTask
+      TaskName="WriteAllTextToFile"
+      TaskFactory="RoslynCodeTaskFactory"
+      AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll"
+   >
+      <ParameterGroup>
+         <FileName ParameterType="System.String" Required="true" />
+         <Text ParameterType="System.String" Required="true" />
+      </ParameterGroup>
+      <Task>
+         <Using Namespace="System" />
+         <Using Namespace="System.IO" />
+         <Code Type="Fragment" Language="cs">
+            <![CDATA[ File.WriteAllText(FileName,Text);]]>
+         </Code>
+      </Task>
+   </UsingTask>
+   <UsingTask
+      TaskName="CreateDirectory"
+      TaskFactory="RoslynCodeTaskFactory"
+      AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll"
+   >
+      <ParameterGroup>
+         <DirectoryName ParameterType="System.String" Required="true" />
+      </ParameterGroup>
+      <Task>
+         <Using Namespace="System" />
+         <Using Namespace="System.IO" />
+         <Code Type="Fragment" Language="cs">
+            <![CDATA[ Directory.CreateDirectory(DirectoryName);]]>
+         </Code>
+      </Task>
+   </UsingTask>
+
+   <PropertyGroup>
+      <_VersionDirectory>$(MSBuildProjectDirectory)\versionInfo</_VersionDirectory>
+      <_VersionPah>$(_VersionDirectory)\ver.txt</_VersionPah>
+      <!--主版本号-->
+      <_VersionMain>0</_VersionMain>
+      <!--次版本号-->
+      <_VersionMinor>0</_VersionMinor>
+      <!--修订号-->
+      <_VersionRecension>0</_VersionRecension>
+      <!--版本日期后缀-->
+      <_VersionSuffix>$([System.DateTime]::Now.ToString(yMMdd))</_VersionSuffix>
+   </PropertyGroup>
+
+   <Choose>
+      <When Condition="Exists($(_VersionPah))">
+         <PropertyGroup>
+            <_OldVersion>$([System.IO.File]::ReadAllText($(_VersionPah)))</_OldVersion>
+            <_OldVersionLength>$(_OldVersion.Split(".").Length)</_OldVersionLength>
+            <_VersionMain Condition="$(_OldVersionLength) > 2">$(_OldVersion.Split(".")[0])</_VersionMain>
+            <_VersionMinor Condition="$(_OldVersionLength) > 2">$(_OldVersion.Split(".")[1])</_VersionMinor>
+            <_VersionRecension Condition="$(_OldVersionLength) > 2">$(_OldVersion.Split(".")[2])</_VersionRecension>
+         </PropertyGroup>
+      </When>
+   </Choose>
+   <PropertyGroup>
+      <_IntVersionRecension>$([System.Int32]::Parse($(_VersionRecension)))</_IntVersionRecension>
+      <_VersionRecension>$([MSBuild]::Add($(_IntVersionRecension),1))</_VersionRecension>
+   </PropertyGroup>
+   <Choose>
+      <When Condition=" $(_VersionRecension) > 99">
+         <PropertyGroup>
+            <_VersionMinor>$([MSBuild]::Add($(_VersionMinor),1))</_VersionMinor>
+            <_VersionRecension>0</_VersionRecension>
+         </PropertyGroup>
+      </When>
+   </Choose>
+   <PropertyGroup>
+      <FileVersion>$(_OldVersion)</FileVersion>
+      <FileVersion>$(_VersionMain).$(_VersionMinor).$(_VersionRecension).$(_VersionSuffix)</FileVersion>
+   </PropertyGroup>
+   <Target Name="_SaveBuildNumber" AfterTargets="Publish">
+      <CreateDirectory DirectoryName="$(_VersionDirectory)" />
+      <WriteAllTextToFile FileName="$(_VersionPah)" Text="$(FileVersion)" />
+   </Target>
+</Project>

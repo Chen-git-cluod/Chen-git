@@ -1,0 +1,61 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.QueryBatteryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    Title="QueryBatteryView"
+    MinWidth="420"
+    SizeToContent="WidthAndHeight"
+    mc:Ignorable="d"
+>
+    <Grid Margin="20,20,20,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="{DynamicResource 输入条码}" />
+            <hc:SearchBar
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                VerticalAlignment="Center"
+                hc:InfoElement.Placeholder="{DynamicResource 输入条码}"
+                hc:TitleElement.Title="{DynamicResource 输入条码}"
+                hc:TitleElement.TitlePlacement="Left"
+                hc:TitleElement.TitleWidth="100"
+                Command="{s:Action ManuallyQueryCMD}"
+                Text="{Binding Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            />
+        </Grid>
+        <ListBox Grid.Row="1" Height="350" Padding="0,10" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding Batterys}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Margin="0,0,20,0" Text="{Binding CreateTime, StringFormat=MM-dd HH:mm:ss}" />
+                        <TextBlock Margin="0,0,20,0" Text="{Binding Barcode}" />
+                        <Button
+                            Grid.Column="2"
+                            Command="{s:Action SelectionCMD}"
+                            CommandParameter="{Binding .}"
+                            Content="{DynamicResource 选择}"
+                            Style="{StaticResource ButtonSuccess.Small}"
+                        />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

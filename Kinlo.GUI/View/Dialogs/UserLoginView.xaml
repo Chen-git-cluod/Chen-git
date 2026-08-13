@@ -1,0 +1,120 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.UserLoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Width="500"
+    Height="330"
+    d:DataContext="{d:DesignInstance vm:UserLoginViewModel}"
+    Background="{DynamicResource RegionBrush}"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+>
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-5" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <cvt:LoginTypeToVisibility2Converter x:Key="LoginTypeToVisibility2Converter" />
+        <cvt:LoginTypeToVisibilityConverter x:Key="LoginTypeToVisibilityConverter" />
+        <cvt:LoginTypeToBoolConverter x:Key="LoginTypeToBoolConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid Height="60">
+            <TextBlock
+                Margin="30,10,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="25"
+                Foreground="{DynamicResource SecondaryBorderBrush}"
+                Style="{StaticResource TextBlockSubTitle}"
+                Text="{DynamicResource 用户登陆}"
+            />
+            <Button
+                Margin="0,10,10,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="hc:ControlCommands.CloseWindow"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:UserLoginView}}"
+                Content="&#xe724;"
+                FontFamily="/Font/#iconfont"
+                FontSize="18"
+                Style="{DynamicResource ButtonCustom}"
+                WindowChrome.IsHitTestVisibleInChrome="True"
+            />
+        </Grid>
+
+        <StackPanel Grid.Row="1" Margin="30,20,30,0">
+            <Grid>
+                <hc:ComboBox
+                    Margin="0,10"
+                    Padding="40,0,0,0"
+                    hc:BorderElement.CornerRadius="0"
+                    hc:InfoElement.Placeholder="{DynamicResource 输入或选择帐号}"
+                    BorderThickness="0,0,0,1"
+                    IsEditable="True"
+                    ItemsSource="{Binding UserNames}"
+                    Style="{DynamicResource ComboBoxExtendBaseStyle}"
+                    Text="{Binding User.Account, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                />
+
+                <TextBlock
+                    Margin="3,0,0,0"
+                    VerticalAlignment="Center"
+                    FontFamily="/Font/#iconfont"
+                    FontSize="20"
+                    Foreground="{DynamicResource InfoBrush}"
+                    IsHitTestVisible="False"
+                    Text="&#xe60c;"
+                />
+            </Grid>
+
+            <Grid Margin="0,20,0,10">
+                <hc:PasswordBox
+                    x:Name="pwdBox"
+                    Margin="0,10"
+                    Padding="40,0,0,0"
+                    hc:BorderElement.CornerRadius="0"
+                    hc:InfoElement.Placeholder="{DynamicResource 输入用户密码}"
+                    BorderThickness="0,0,0,1"
+                    ShowEyeButton="True"
+                    Style="{DynamicResource PasswordBoxPlusBaseStyle}"
+                />
+                <TextBlock
+                    Margin="3,0,0,0"
+                    VerticalAlignment="Center"
+                    FontFamily="/Font/#iconfont"
+                    FontSize="20"
+                    Foreground="{DynamicResource InfoBrush}"
+                    IsHitTestVisible="False"
+                    Text="&#xe600;"
+                />
+            </Grid>
+        </StackPanel>
+
+        <Button
+            Grid.Row="3"
+            Height="35"
+            Margin="30,30,30,40"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            hc:BorderElement.CornerRadius="16.5"
+            Command="{s:Action ConfirmCMD}"
+            Content="{DynamicResource 登陆}"
+            IsDefault="True"
+            Style="{DynamicResource ButtonPrimary}"
+        />
+    </Grid>
+</Window>

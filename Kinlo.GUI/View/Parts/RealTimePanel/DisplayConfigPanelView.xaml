@@ -1,0 +1,179 @@
+﻿<Border
+    x:Class="Kinlo.GUI.View.DisplayConfigPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    Padding="20,0"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="{DynamicResource RegionBrush}"
+    CornerRadius="{DynamicResource MainCornerRadius}"
+    mc:Ignorable="d"
+>
+    <Border.Resources>
+        <cvt:ProductionTypeToVIsibilityConverter x:Key="ProductionTypeToVIsibilityConverter" />
+        <cvt:BoolToEnableTextConverter x:Key="BoolToEnableTextConverter" />
+        <cvt:EnumToLocalizedStringConverter x:Key="EnumToLocalizedStringConverter" />
+    </Border.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Rectangle Grid.Column="0" Width="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Fill="{DynamicResource BorderBrush}" />
+        <Rectangle Grid.Column="1" Width="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Fill="{DynamicResource BorderBrush}" />
+        <StackPanel Margin="0,20,20,20" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock>
+                    <Run Text="{DynamicResource 前称重量管控}" />
+                    <Run Text=":" />
+                </TextBlock>
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="3,0,0,0"
+                    HorizontalAlignment="Left"
+                    Foreground="{DynamicResource PrimaryBrush}"
+                    Text="{tools:ResourceBinding Parameter.FunctionEnable.IsEnableIncomingWeightControl,
+                                                 Converter={StaticResource BoolToEnableTextConverter}}"
+                />
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock>
+                    <Run Text="{DynamicResource 后称重量管控}" />
+                    <Run Text=":" />
+                </TextBlock>
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="3,0,0,0"
+                    HorizontalAlignment="Left"
+                    Foreground="{DynamicResource PrimaryBrush}"
+                    Text="{tools:ResourceBinding Parameter.FunctionEnable.IsEnableIncomingWeightControl,
+                                                 Converter={StaticResource BoolToEnableTextConverter}}"
+                />
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Visibility="{Binding Parameter.AdvancedConfig.ProductionType, Converter={StaticResource ProductionTypeToVIsibilityConverter}, ConverterParameter='一次注液,二次注液'}">
+                    <Run Text="{DynamicResource 启用变量注液}" />
+                    <Run Text=":" />
+                </TextBlock>
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="3,0,0,0"
+                    HorizontalAlignment="Left"
+                    Foreground="{DynamicResource PrimaryBrush}"
+                    Text="{tools:ResourceBinding Parameter.FunctionEnable.IsEnableVariableInjection,
+                                                 Converter={StaticResource BoolToEnableTextConverter}}"
+                />
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock>
+                    <Run Text="{DynamicResource 注液量检测}" />
+                    <Run Text=":" />
+                </TextBlock>
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="3,0,0,0"
+                    HorizontalAlignment="Left"
+                    Foreground="{DynamicResource PrimaryBrush}"
+                    Text="{tools:ResourceBinding Parameter.FunctionEnable.IsEnableInjectionCheck,
+                                                 Converter={StaticResource BoolToEnableTextConverter}}"
+                />
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Margin="20,20,20,20" VerticalAlignment="Top">
+            <TextBlock Visibility="{Binding Parameter.AdvancedConfig.ProductionType, Converter={StaticResource ProductionTypeToVIsibilityConverter}, ConverterParameter='一次注液,二次注液'}">
+                <Run Text="{DynamicResource 来料重量范围}" />
+                <Run Text="(g)：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.IncomingWeightLower}" />
+                <Run Text="~" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.IncomingWeightUpper}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Text="{DynamicResource 保液量范围}" />
+                <Run Text="(g)：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.InjectionLower}" />
+                <Run Text="~" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.InjectionStandard}" />
+                <Run Text="~" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.InjectionUpper}" />
+            </TextBlock>
+            <TextBlock Visibility="{Binding Parameter.AdvancedConfig.ProductionType, Converter={StaticResource ProductionTypeToVIsibilityConverter}, ConverterParameter='一次注液,二次注液'}">
+                <Run Text="{DynamicResource 注液泵范围}" />
+                <Run Text="(g)：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.VariableInjectionLower}" />
+                <Run Text="~" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.VariableInjectionUpper}" />
+            </TextBlock>
+            <TextBlock Visibility="{Binding Parameter.AdvancedConfig.ProductionType, Converter={StaticResource ProductionTypeToVIsibilityConverter}, ConverterParameter='一次注液,二次注液'}">
+                <Run Text="{DynamicResource 补液泵范围}" />
+                <Run Text="(g)：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="1" />
+                <Run Text="~" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.RunParameter.ReplenishInjectionUpper}" />
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Margin="20" VerticalAlignment="Center">
+            <TextBlock>
+                <Run Text="{DynamicResource 电解液批次号}" />
+                <Run Text="：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.DeviceParameter.ElectrolyteLotCode}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Text="{DynamicResource 电解液数量}" />
+                <Run Text="：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.DeviceParameter.ElectrolyteQuantity}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Text="{DynamicResource 胶钉批次码}" />
+                <Run Text="：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.DeviceParameter.GlueNailCode}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Text="{DynamicResource 工单号}" />
+                <Run Text="：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.DeviceParameter.WorkOrderNo}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Text="{DynamicResource 设备编码}" />
+                <Run Text="：" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding Parameter.DeviceParameter.DeviceCode}" />
+            </TextBlock>
+        </StackPanel>
+        <Grid
+            Grid.RowSpan="5"
+            Grid.ColumnSpan="5"
+            HorizontalAlignment="Stretch"
+            hc:Poptip.Content="此处为展示面板，如需修改请移步相关设置面板！"
+            hc:Poptip.HitMode="None"
+            hc:Poptip.IsOpen="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}"
+            hc:Poptip.Placement="Bottom"
+            Background="Transparent"
+        />
+    </Grid>
+</Border>

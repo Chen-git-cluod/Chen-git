@@ -1,0 +1,154 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.HomeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignInstance vm:HomeViewModel}"
+    d:DesignHeight="800"
+    d:DesignWidth="1600"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="{StaticResource MainSpace}" />
+            <RowDefinition />
+            <RowDefinition Height="{StaticResource MainSpace}" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="{StaticResource MainSpace}" />
+            <ColumnDefinition Width="760" />
+        </Grid.ColumnDefinitions>
+        <GridSplitter
+            Grid.Row="0"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent" />
+        <GridSplitter
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent" />
+
+        <Border
+            Background="{DynamicResource RegionBrush}"
+            BorderThickness="0"
+            CornerRadius="{DynamicResource MainCornerRadius}">
+            <TabControl
+                Margin="3,3,3,1"
+                Background="Transparent"
+                BorderThickness="0,0,0,0"
+                ItemsSource="{Binding DisplayData.ProcessesDatas}">
+                <TabControl.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource TabItemStyle}" TargetType="TabItem">
+                        <Setter Property="IsTabStop" Value="False" />
+                        <!--  让每个 TabItem 不参与 Tab 导航  -->
+                    </Style>
+                </TabControl.ItemContainerStyle>
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            Margin="5,0"
+                            FontSize="14"
+                            Text="{tools:ResourceBinding Description}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <ToggleButton
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Command="{s:Action AdjustCmd}"
+                                CommandParameter="{Binding Processes}"
+                                Content="&#xe615;"
+                                FontFamily="/Font/#iconfont"
+                                FontSize="18"
+                                Foreground="#656565"
+                                IsChecked="{Binding RelativeSource={RelativeSource AncestorType=local:HomeView}, Path=DataContext.EntityPropertyVisibleVM.IsEntityPropertyVisible}"
+                                Style="{StaticResource ToggleButtonCustom}"
+                                ToolTip="{DynamicResource other_DisplayColumns}" />
+                            <ContentControl
+                                Grid.Row="1"
+                                Margin="10,5"
+                                Content="{Binding DataDisplayControl}" />
+                        </Grid>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </Border>
+        <Border
+            Grid.Column="2"
+            Background="Transparent"
+            BorderThickness="0"
+            CornerRadius="{DynamicResource MainCornerRadius}">
+            <ContentControl s:View.Model="{Binding RealTimeLayoutVM}" />
+        </Border>
+        <Border
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Stretch"
+            Background="{DynamicResource RegionBrush}"
+            BorderThickness="0"
+            CornerRadius="{DynamicResource MainCornerRadius}"
+            DataContext="{Binding DisplayData.CompleteBatteryDatas}">
+            <Grid Margin="10,10,10,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Top"
+                    FontSize="14"
+                    Foreground="{DynamicResource PrimaryBrush}"
+                    Text="{tools:ResourceBinding Description}" />
+                <ToggleButton
+                    x:Name="entityPropertyVisibleTBut"
+                    Grid.Column="1"
+                    Margin="0,0,10,0"
+                    HorizontalAlignment="Right"
+                    Command="{s:Action AdjustCmd}"
+                    CommandParameter="{Binding Processes}"
+                    Content="&#xe615;"
+                    FontFamily="/Font/#iconfont"
+                    FontSize="18"
+                    Foreground="#656565"
+                    IsChecked="{Binding RelativeSource={RelativeSource AncestorType=local:HomeView}, Path=DataContext.EntityPropertyVisibleVM.IsEntityPropertyVisible}"
+                    Style="{StaticResource ToggleButtonCustom}"
+                    ToolTip="{DynamicResource other_DisplayColumns}" />
+                <ContentControl
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Margin="0"
+                    Content="{Binding DataDisplayControl}" />
+            </Grid>
+        </Border>
+        <!--#region 设备在线状态-->
+        <ContentControl
+            Grid.Row="4"
+            Grid.ColumnSpan="3"
+            Margin="0,0,0,0"
+            s:View.Model="{Binding DeviceStatusVM}" />
+        <!--#endregion-->
+    </Grid>
+</UserControl>

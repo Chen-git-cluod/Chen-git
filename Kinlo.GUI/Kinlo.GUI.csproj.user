@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_LastSelectedProfileId>D:\项目\芜湖\KL2511011-12芜湖国轩\Kinlo.GUI\Properties\PublishProfiles\FolderProfile4.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="View\Dialogs\HipotCurveView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\CustomInteractView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\InspectionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\RemoteAssistantView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\InjectCPK\InjectCPKChartSingleShowView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\DeviceView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\InjectCPK\InjectCPKChartView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\GasConcentrationView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\ManualTrayLoadingView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\MaterialLoadView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\QueryBatteryView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\InjectionPump\InjectionPumpView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\PlcWarning\PlcWarningStatisticalView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\ProcessPanel\PlcStatusStatisticalView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\ProcessPanel\ProcessPanelView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\ProcessPanel\PercentChartView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\DataStatisticalChartsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\DataStatisticalCharts\ProcessPanel\TrayCup\TrayCupShowDetailDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\LogHistory\LogHistoryView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\ProductionHistory\MesResendView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\ProductionHistory\ProductionHistoryLayoutView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\ConfigurationWebView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\DeviceStatusView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\FileDisplay\FileDisplayView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\RealTimePanel\ElectricMeterView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\EntityPropertyVisibleView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\LogHistory\LogMesLogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\LogHistory\LogRunAnalysisView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\顶部区域\PLCResectionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\RealTimePanel\DisplayConfigPanelView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\RealTimePanel\DisplayDashboardPanelView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\RealTimePanel\EnergyView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\PLCInteractAddressView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\PLCScanSignalView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\LogHistory\LogRunView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\RealTimePanel\RealTimeLayoutView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\RealTimePanel\RealTimeDataView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\RfidView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dialogs\PlcTestView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Parts\WebServerTrayView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Dialogs\DeviceView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Dialogs\MaterialLoadView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Dialogs\ManualRefillView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Dialogs\UserLoginView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\ConfigurationDeviceView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\ConfigurationMesView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\ConfigurationMesParameterView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\ConfigurationParameterView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\ConfigurationInteractionSignalView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\HomeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\ProductionHistory\ProductionHistoryView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\RoleManagementView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\UserManagementView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\DeviceStatusView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\RealTimePanel\ElectricMeterView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\EntityPropertyVisibleView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\LogHistory\LogMesLogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\顶部区域\HeaderLayoutView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\顶部区域\PLCResectionView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Pages\LogHistory\LogRunView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\顶部区域\StartDeviceView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\顶部区域\ThemeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Parts\顶部区域\UserStatusView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\MainView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Dialogs\PLCInteractAddressView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Dialogs\PLCScanSignalView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Dialogs\UserRegisterView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

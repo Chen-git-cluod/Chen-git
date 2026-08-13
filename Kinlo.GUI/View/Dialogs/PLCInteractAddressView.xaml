@@ -1,0 +1,273 @@
+﻿<Window
+  x:Class="Kinlo.GUI.View.PLCInteractAddressView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:enum="clr-namespace:Kinlo.SharedBase.Enums;assembly=Kinlo.SharedBase"
+  xmlns:hc="https://handyorg.github.io/handycontrol"
+  xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+  xmlns:local="clr-namespace:Kinlo.GUI.View"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:s="https://github.com/canton7/Stylet"
+  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+  xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+  xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+  Title="{Binding Title}"
+  Width="680"
+  d:DataContext="{d:DesignInstance vm:PLCInteractAddressViewModel}"
+  Background="{DynamicResource RegionBrush}"
+  SizeToContent="Height"
+  WindowStartupLocation="CenterScreen"
+  mc:Ignorable="d">
+  <Window.Resources>
+    <x:Array x:Key="BoolValues" Type="{x:Type sys:Boolean}">
+      <sys:Boolean>True</sys:Boolean>
+      <sys:Boolean>False</sys:Boolean>
+    </x:Array>
+    <cvt:ProductionDataTypeToVisibilityConverter x:Key="ProductionDataTypeToVisibilityConverter" />
+    <cvt:ProcessesToVisibilityConverter x:Key="ProcessesToVisibilityConverter" />
+    <GridLength x:Key="TitleWidth">130</GridLength>
+    <ObjectDataProvider
+      x:Key="DataTypeEnum"
+      MethodName="GetValues"
+      ObjectType="{x:Type sys:Enum}">
+      <ObjectDataProvider.MethodParameters>
+        <x:Type TypeName="enum:ProductionDataTypeEnum" />
+      </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+  </Window.Resources>
+  <StackPanel Margin="{StaticResource ControlPadding}">
+
+    <hc:ComboBox
+      Height="25"
+      Margin="0,0"
+      hc:TitleElement.Title="{DynamicResource 选择服务：}"
+      hc:TitleElement.TitlePlacement="Left"
+      hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+      ItemsSource="{Binding ServiceItems}"
+      Text="{Binding ServiceName}" />
+
+    <Grid Margin="0,10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="230" />
+      </Grid.ColumnDefinitions>
+      <hc:ComboBox
+        Height="25"
+        Margin="0,0"
+        hc:TitleElement.Title="{DynamicResource 工序类型：}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+        ItemsSource="{Binding Source={StaticResource ProcessesTypeEnum}}"
+        SelectedValue="{Binding ProcessesType}">
+        <!--<ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{tools:ResourceBinding .}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>-->
+      </hc:ComboBox>
+      <hc:ComboBox
+        Grid.Column="1"
+        Height="25"
+        Margin="25,0,0,0"
+        hc:TitleElement.Title="{DynamicResource 生产顺序：}"
+        hc:TitleElement.TitlePlacement="Left"
+        ItemsSource="{Binding ProductCount}"
+        SelectedValue="{Binding PLCInteractAddressCopy.ProductionIndex}" />
+    </Grid>
+    <Grid Margin="0,10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="auto" />
+      </Grid.ColumnDefinitions>
+      <hc:ComboBox
+        Grid.Column="0"
+        Height="25"
+        Margin="0,0,0,0"
+        hc:TitleElement.Title="{DynamicResource 界面数据显示：}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+        ItemsSource="{Binding Source={StaticResource DataTypeEnum}}"
+        SelectedValue="{Binding PLCInteractAddressCopy.ProductionDataType}" />
+
+    </Grid>
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="auto" />
+      </Grid.ColumnDefinitions>
+      <hc:ComboBox
+        Height="25"
+        Margin="0,10"
+        hc:TitleElement.Title="{DynamicResource 设备通信类型：}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+        ItemsSource="{Binding Source={StaticResource CommunicationEnum}}"
+        SelectedValue="{Binding PLCInteractAddressCopy.DeviceCommunicationType}" />
+    </Grid>
+    <TextBlock
+      Grid.Column="1"
+      Margin="130,0,0,-8"
+      HorizontalAlignment="Left"
+      VerticalAlignment="Bottom"
+      Foreground="{Binding TextColor}"
+      Text="{tools:ResourceBinding Tip}" />
+    <Grid Margin="0,10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <hc:ComboBox
+        Height="25"
+        hc:TitleElement.Title="{DynamicResource 起始索引 (设备|数据)：}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+        ItemsSource="{Binding DeviceIndexList}"
+        SelectedValue="{Binding PLCInteractAddressCopy.DeviceStartIndex}" />
+      <hc:ComboBox
+        Grid.Column="1"
+        Height="25"
+        Margin="30,0,0,0"
+        hc:TitleElement.Title="{DynamicResource 数量 (设备|数据)：}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="105"
+        ItemsSource="{Binding DeviceCount}"
+        SelectedValue="{Binding PLCInteractAddressCopy.DataLength}" />
+    </Grid>
+    <!--<Grid Margin="0,10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <hc:ComboBox
+        Grid.Column="0"
+        Height="25"
+        hc:TitleElement.Title="{DynamicResource 行数}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+        ItemsSource="{Binding DeviceCount}"
+        SelectedValue="{Binding PLCInteractAddressCopy.RowCount}" />
+      <hc:ComboBox
+        Grid.Column="1"
+        Height="25"
+        Margin="30,0,0,0"
+        hc:TitleElement.Title="{DynamicResource 列数}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="105"
+        ItemsSource="{Binding DeviceCount}"
+        SelectedValue="{Binding PLCInteractAddressCopy.ColumnCount}" />
+
+    </Grid>-->
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="200" />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <hc:TextBox
+        Height="25"
+        Margin="0,10"
+        hc:BorderElement.CornerRadius="4 0 0 4"
+        hc:TitleElement.Title="{DynamicResource 启动命令标签：}"
+        hc:TitleElement.TitlePlacement="Left"
+        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+        BorderThickness="1,1,0,1"
+        IsReadOnly="True"
+        Text="{Binding PLCInteractAddressCopy.StartCommand.Index}" />
+      <hc:ComboBox
+        Grid.Column="1"
+        Height="25"
+        Margin="0,10"
+        hc:BorderElement.CornerRadius="0 4 4 0"
+        DisplayMemberPath="Tag.Lable"
+        ItemsSource="{Binding StartSignaItems}"
+        SelectedItem="{Binding PLCInteractAddressCopy.StartCommand}"
+        Text="{Binding PLCInteractAddressCopy.StartCommand.Tag.Lable, Mode=TwoWay}"
+        ToolTip="{Binding PLCInteractAddressCopy.StartCommand.Tag.Address}" />
+    </Grid>
+
+    <hc:TextBox
+      Height="25"
+      Margin="0,10"
+      hc:TitleElement.Title="{DynamicResource 获取数据标签：}"
+      hc:TitleElement.TitlePlacement="Left"
+      hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+      Text="{Binding PLCInteractAddressCopy.DataAddress.Lable}"
+      ToolTip="{Binding PLCInteractAddressCopy.DataAddress.Address}" />
+
+    <hc:TextBox
+      Height="25"
+      Margin="0,10"
+      hc:TitleElement.Title="{DynamicResource 备用数据标签：}"
+      hc:TitleElement.TitlePlacement="Left"
+      hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+      Text="{Binding PLCInteractAddressCopy.ExtraDataAddress.Lable}"
+      ToolTip="{Binding PLCInteractAddressCopy.ExtraDataAddress.Address}" />
+    <WrapPanel HorizontalAlignment="Right">
+
+      <CheckBox
+        Grid.Column="1"
+        Margin="0,0,20,0"
+        Content="{DynamicResource 启用}"
+        IsChecked="{Binding PLCInteractAddressCopy.IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      <Button
+        Grid.Column="2"
+        Height="22"
+        Margin="0,5,0,5"
+        HorizontalAlignment="Right"
+        hc:IconElement.Geometry="{StaticResource AddGeometry}"
+        kc:LanguageResource.Key="添加扩展"
+        Command="{s:Action AddExtensionCmd}"
+        Style="{StaticResource ButtonPrimary.Small}" />
+    </WrapPanel>
+
+    <hc:ScrollViewer MaxHeight="130">
+      <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding PLCInteractAddressCopy.ExtensionProps}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Grid Margin="0,5">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <Button
+                Grid.Column="0"
+                Height="22"
+                hc:IconElement.Geometry="{StaticResource DeleteFillCircleGeometry}"
+                hc:IconElement.Height="10"
+                Command="{s:Action DeleteExtensionCmd}"
+                CommandParameter="{Binding .}"
+                Content="{DynamicResource 删除}"
+                Style="{StaticResource ButtonDanger.Small}" />
+              <hc:ComboBox
+                Grid.Column="1"
+                MinWidth="120"
+                Margin="10,0,20,0"
+                HorizontalAlignment="Stretch"
+                hc:TitleElement.Title="类型"
+                hc:TitleElement.TitlePlacement="Left"
+                ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ExtensionTypes}"
+                SelectedValue="{Binding Type}" />
+              <hc:TextBox
+                Grid.Column="2"
+                MinWidth="120"
+                HorizontalAlignment="Stretch"
+                hc:TitleElement.Title="值"
+                hc:TitleElement.TitlePlacement="Left"
+                Text="{Binding ValueStr}" />
+
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </hc:ScrollViewer>
+    <Button
+      Margin="0,20,0,0"
+      HorizontalAlignment="Stretch"
+      Command="{s:Action ConfirmCMD}"
+      Content="{DynamicResource 确定}"
+      Style="{StaticResource ButtonSuccess}" />
+  </StackPanel>
+</Window>

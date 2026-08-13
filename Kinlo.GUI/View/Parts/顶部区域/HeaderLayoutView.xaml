@@ -1,0 +1,127 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.HeaderLayoutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Height="45"
+    Margin="0,0,0,0"
+    d:DataContext="{d:DesignInstance vm:HeaderLayoutViewModel}"
+    d:DesignWidth="1200"
+    mc:Ignorable="d">
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="110" />
+        </Grid.ColumnDefinitions>
+
+        <!--<WrapPanel VerticalAlignment="Center">
+            <TextBlock
+                Margin="20,0,0,0"
+                Style="{StaticResource TextBlockTitle}"
+                Text="{Binding Parameter.DeviceParameter.Title}" />
+        </WrapPanel>-->
+        <ContentControl
+            Grid.Column="1"
+            Margin="0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            s:View.Model="{Binding PLCResectionVM}" />
+
+        <StackPanel
+            Grid.Column="2"
+            Margin="50,0,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal"
+            WindowChrome.IsHitTestVisibleInChrome="True">
+            <ContentControl
+                Margin="0,0,0,0"
+                VerticalAlignment="Center"
+                s:View.Model="{Binding UserStatus}" />
+            <Border
+                Width="1"
+                Height="16"
+                Margin="23,0,20,0"
+                HorizontalAlignment="Center"
+                BorderBrush="#888888"
+                BorderThickness="1,0,0,0" />
+            <ContentControl
+                Margin="0,0,20,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                hc:BorderElement.CornerRadius="15"
+                s:View.Model="{Binding StartDevice}"
+                Cursor="Hand" />
+            <Border
+                Width="1"
+                Height="16"
+                Margin="0,0,15,0"
+                HorizontalAlignment="Center"
+                BorderBrush="#888888"
+                BorderThickness="1,0,0,0" />
+            <ContentControl s:View.Model="{Binding HelpMenuVM}" />
+            <ToggleButton
+                x:Name="openThemeBut"
+                Margin="15,0,15,0"
+                BorderThickness="0"
+                Content="&#xe605;"
+                Cursor="Hand"
+                FontFamily="/Font/#iconfont"
+                FontSize="16"
+                Style="{DynamicResource ToggleButtonCustom}" />
+            <Popup
+                AllowsTransparency="True"
+                IsOpen="{Binding ElementName=openThemeBut, Path=IsChecked}"
+                PlacementTarget="{Binding ElementName=openThemeBut}"
+                StaysOpen="False">
+                <ContentControl s:View.Model="{Binding Theme}" />
+            </Popup>
+        </StackPanel>
+        <UniformGrid
+            Grid.Column="3"
+            Margin="0,0,8,0"
+            Columns="3">
+            <Button
+                Grid.Column="2"
+                Padding="0"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{s:Action Minimized}"
+                Content="&#xe60e;"
+                FontFamily="/Font/#iconfont"
+                FontSize="15"
+                Foreground="{DynamicResource PrimaryTextBrush}"
+                WindowChrome.IsHitTestVisibleInChrome="True" />
+            <Button
+                Grid.Column="2"
+                Padding="0"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{s:Action MaximizedCMD}"
+                Content="&#xe651;"
+                FontFamily="/Font/#iconfont"
+                FontSize="14"
+                Foreground="{DynamicResource PrimaryTextBrush}"
+                WindowChrome.IsHitTestVisibleInChrome="True" />
+            <Button
+                Grid.Column="2"
+                Padding="0"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{s:Action CloseCMD}"
+                Content="&#xe602;"
+                FontFamily="/Font/#iconfont"
+                FontSize="15"
+                Foreground="{DynamicResource PrimaryTextBrush}"
+                WindowChrome.IsHitTestVisibleInChrome="True" />
+        </UniformGrid>
+    </Grid>
+</UserControl>

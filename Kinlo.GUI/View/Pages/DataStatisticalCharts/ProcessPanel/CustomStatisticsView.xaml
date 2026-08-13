@@ -1,0 +1,88 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.CustomStatisticsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignInstance vm:CustomStatisticsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+>
+    <Border
+        Grid.Row="0"
+        Grid.Column="2"
+        Padding="{StaticResource TitlePadding2}"
+        Background="{DynamicResource RegionBrush}"
+        CornerRadius="{DynamicResource MainCornerRadius}"
+    >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Margin="0,0,0,30" HorizontalAlignment="Left" kc:LanguageResource.Key="自定义统计" Style="{StaticResource TextBlockSubTitleBold}" />
+            <StackPanel Grid.Row="1" Margin="70,0,20,10" Orientation="Horizontal">
+                <hc:DateTimePicker
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Width="160"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    hc:InfoElement.Title="{DynamicResource 开始时间}"
+                    SelectedDateTime="{Binding StartTime}"
+                    Style="{StaticResource DateTimePickerPlus}"
+                />
+                <TextBlock Margin="1,0,1,7" VerticalAlignment="Bottom" Text="~" />
+                <hc:DateTimePicker
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="160"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    hc:InfoElement.Title="{DynamicResource 结束时间}"
+                    SelectedDateTime="{Binding EndTime}"
+                    Style="{StaticResource DateTimePickerPlus}"
+                />
+                <hc:ComboBox
+                    MinWidth="120"
+                    Margin="5,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    hc:InfoElement.Title="{DynamicResource 选择统计工序}"
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding ResultFields}"
+                    SelectedItem="{Binding SelectResultField}"
+                />
+                <hc:ComboBox
+                    MinWidth="120"
+                    Margin="5,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    hc:InfoElement.Title="{DynamicResource 选择统计通道}"
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding IndexFields}"
+                    SelectedItem="{Binding SelectIndexField}"
+                />
+                <Button
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Bottom"
+                    hc:IconElement.Geometry="{StaticResource SearchGeometry}"
+                    Command="{s:Action QueryCmd}"
+                    Content="{DynamicResource 统计}"
+                    IsEnabled="{Binding IsQueryFinish}"
+                    Style="{StaticResource ButtonPrimary}"
+                />
+            </StackPanel>
+            <ContentControl Grid.Row="2" Margin="30" Content="{Binding ChartView}" />
+        </Grid>
+    </Border>
+</UserControl>

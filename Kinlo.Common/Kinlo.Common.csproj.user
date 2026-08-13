@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_LastSelectedProfileId>D:\项目\芜湖\KL2511011-12芜湖国轩\Kinlo.Common\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\AlarmNotification.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Dialogs\EmptyFrameDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Dialogs\AlarmDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\GlobalVariableDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\HomeDataGridDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\ListBoxItemConfigStyleDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\MainDisplayListViewItemDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\MainWindowStyleDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\MenuDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\Preset\Default\Dark.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\Preset\Default\Light.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

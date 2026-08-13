@@ -1,0 +1,102 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.ThemeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="clr-namespace:Kinlo.SharedBase.Enums;assembly=Kinlo.SharedBase"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d"
+>
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="ThemeEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enum:LocalThemeEnum" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <hc:TransitioningContentControl>
+        <Border
+            Grid.ColumnSpan="2"
+            Margin="20"
+            Padding="6"
+            Background="{DynamicResource RegionBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            CornerRadius="{DynamicResource MainCornerRadius}"
+        >
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" Direction="0" Opacity=".6" ShadowDepth="0" Color="Black" />
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <ToggleButton
+                    Grid.Row="0"
+                    Margin="15,15,15,10"
+                    HorizontalAlignment="Left"
+                    Content="{DynamicResource 跟随系统主题}"
+                    IsChecked="{Binding IsSystemTheme}"
+                    Style="{DynamicResource ToggleButtonSwitch.Small}"
+                />
+                <Button
+                    Grid.Row="1"
+                    Margin="15,15,15,20"
+                    HorizontalAlignment="Left"
+                    Command="{s:Action OpenSystemThemeCMD}"
+                    Content="{DynamicResource 打开系统主题面板}"
+                    Style="{DynamicResource ButtonPrimary}"
+                    Visibility="{Binding IsSystemTheme, Converter={StaticResource Boolean2VisibilityConverter}}"
+                />
+
+                <hc:ComboBox
+                    Grid.Row="1"
+                    Margin="15,15,15,20"
+                    HorizontalAlignment="Stretch"
+                    hc:TitleElement.Title="{DynamicResource 选择模式}"
+                    hc:TitleElement.TitlePlacement="Left"
+                    ItemsSource="{Binding Source={StaticResource ThemeEnum}}"
+                    SelectedItem="{Binding SelectedTheme}"
+                    Visibility="{Binding IsSystemTheme, Converter={StaticResource Boolean2VisibilityReConverter}}"
+                />
+
+                <!--<ToggleButton
+                        Grid.Column="1"
+                        Width="80"
+                        Margin="0,20"
+                        HorizontalAlignment="Center"
+                        Content="深色模式"
+                        IsChecked="{Binding IsDark}"
+                        Style="{DynamicResource ToggleButtonSwitch.Small}"
+                        Visibility="{Binding IsSystemTheme, Converter={StaticResource Boolean2VisibilityReConverter}}" />-->
+
+                <Border Grid.Row="1" Margin="10,0" VerticalAlignment="Bottom" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" />
+                <TextBlock
+                    Grid.Row="2"
+                    Margin="0,10,0,5"
+                    HorizontalAlignment="Center"
+                    FontSize="13"
+                    Style="{DynamicResource TextBlockSubTitle}"
+                    Text="{DynamicResource 选择主题色}"
+                    Visibility="{Binding IsSystemTheme, Converter={StaticResource Boolean2VisibilityReConverter}}"
+                />
+                <hc:ColorPicker
+                    Name="ColorPicker"
+                    Grid.Row="3"
+                    Margin="0"
+                    Canceled="{s:Action CanceledCMD}"
+                    Confirmed="{s:Action SelectedColorChangedCMD}"
+                    SelectedBrush="{Binding SelectedBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Visibility="{Binding IsSystemTheme, Converter={StaticResource Boolean2VisibilityReConverter}}"
+                />
+            </Grid>
+        </Border>
+    </hc:TransitioningContentControl>
+</UserControl>

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+   <PropertyGroup>
+      <TargetFramework>net8.0-windows</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <OutputType>Library</OutputType>
+
+      <!--"编译时" 是否还原Nuget包-->
+      <RestoreDuringBuild>false</RestoreDuringBuild>
+      <!--"发布时" 是否还原Nuget包-->
+      <RestoreOnPublish>false</RestoreOnPublish>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+      <EnablePackageValidation>false</EnablePackageValidation>
+      <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+   </PropertyGroup>
+
+   <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <ProjectReference Include="..\Kinlo.Common\Kinlo.Common.csproj" />
+   </ItemGroup>
+</Project>

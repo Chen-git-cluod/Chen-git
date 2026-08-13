@@ -1,0 +1,124 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+   <Import Project="AutoVersioningTask.targets" />
+   <PropertyGroup>
+      <OutputType>WinExe</OutputType>
+      <TargetFramework>net8.0-windows7.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <UseWPF>true</UseWPF>
+      <ApplicationIcon>Resources\WeightMain.ico</ApplicationIcon>
+      <PlatformTarget>x64</PlatformTarget>
+      <!--"编译时" 是否还原Nuget包-->
+      <RestoreDuringBuild>false</RestoreDuringBuild>
+      <!--"发布时" 是否还原Nuget包-->
+      <RestoreOnPublish>false</RestoreOnPublish>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+      <EnablePackageValidation>false</EnablePackageValidation>
+      <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <Optimize>False</Optimize>
+      <DebugType>portable</DebugType>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+     <Optimize>True</Optimize>
+     <DebugType>portable</DebugType>
+   </PropertyGroup>
+
+   <ItemGroup>
+      <None Remove="Font\iconfont.ttf" />
+      <None Remove="Resources\Loading.png" />
+      <None Remove="Resources\logo - 副本.png" />
+      <None Remove="Resources\logo.png" />
+      <None Remove="Resources\logo2.png" />
+      <None Remove="Resources\ServerRun - 复制.ico" />
+      <None Remove="Resources\ServerRun.ico" />
+      <None Remove="Resources\ServiceRun.png" />
+      <None Remove="Resources\ServiceStop1.png" />
+      <None Remove="Resources\ServiceStop2.png" />
+      <None Remove="Resources\WeightMain.ico" />
+      <None Remove="Resources\WeightMain2.ico" />
+   </ItemGroup>
+
+   <ItemGroup>
+     <None Include="Kinlo.sln" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Resource Include="Resources\ServiceRun.png" />
+      <Resource Include="Resources\ServiceStop1.png" />
+      <Resource Include="Resources\ServiceStop2.png" />
+      <Resource Include="Resources\WeightMain2.ico">
+         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+   </ItemGroup>
+
+   <ItemGroup>
+      <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.1.0-dev-798" />
+      <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
+      <PackageReference Include="System.ServiceModel.Federation" Version="8.1.2" />
+      <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
+      <PackageReference Include="System.ServiceModel.NetNamedPipe" Version="8.1.2" />
+      <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.2" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <ProjectReference Include="..\Kinlo.Common\Kinlo.Common.csproj" />
+      <ProjectReference Include="..\Kinlo.LogNet\Kinlo.LogNet.csproj" />
+      <ProjectReference Include="..\Kinlo.MESDocking\Kinlo.MESDocking.csproj" />
+      <ProjectReference Include="..\Kinlo.Services\Kinlo.Services.csproj" />
+      <ProjectReference Include="..\Kinlo.SharedBase\Kinlo.SharedBase.csproj" />
+      <ProjectReference Include="..\Kinlo.WebApi\Kinlo.WebApi.csproj" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Resource Include="Font\iconfont.ttf">
+         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\logo - 副本.png" />
+      <Resource Include="Resources\logo.png" />
+      <Resource Include="Resources\logo2.png" />
+      <Resource Include="Resources\WeightMain.ico" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <SplashScreen Include="Resources\Loading.png" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Compile Update="View\Pages\DataStatisticalCharts\ProcessPanel\CustomStatisticsView.xaml.cs">
+         <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\Pages\DataStatisticalCharts\ProcessPanel\TrayCup\TrayStatisticsView.xaml.cs">
+         <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\Dialogs\WorkOrderView.xaml.cs">
+         <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\Dialogs\ManualRefillView.xaml.cs">
+         <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\Pages\LogHistory\LogWebLogView.xaml.cs">
+         <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\Pages\LogHistory\LogPlcAlarmView.xaml.cs">
+         <SubType>Code</SubType>
+      </Compile>
+   </ItemGroup>
+
+   <ItemGroup>
+      <Page Update="View\Dialogs\ManualRefillView.xaml">
+         <SubType>Designer</SubType>
+      </Page>
+   </ItemGroup>
+   <!-- 自动将引用项目的 DLL 复制到发布目录 -->
+   <Target Name="CopyCustomDllsToPublish" AfterTargets="Publish">
+      <ItemGroup>
+         <ExtraDlls Include="bin\$(Configuration)\$(TargetFramework)\SqlSugar.dll" />
+         <ExtraDlls Include="bin\$(Configuration)\$(TargetFramework)\Kinlo.Common.dll" />
+         <ExtraDlls Include="bin\$(Configuration)\$(TargetFramework)\Kinlo.SharedBase.dll" />
+      </ItemGroup>
+      <Copy SourceFiles="@(ExtraDlls)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+   </Target>
+</Project>

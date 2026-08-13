@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+      <TargetFramework>netstandard2.0</TargetFramework>
+      <LangVersion>latest</LangVersion>
+      <!--"编译时" 是否还原Nuget包-->
+      <RestoreDuringBuild>false</RestoreDuringBuild>
+      <!--"发布时" 是否还原Nuget包-->
+      <RestoreOnPublish>false</RestoreOnPublish>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+      <EnablePackageValidation>false</EnablePackageValidation>
+      <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+      <!--禁用发布时的漏洞检查，提升速度。-->
+   </PropertyGroup>
+
+   <ItemGroup>
+      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.12.0-beta1.25155.1" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.13.0" PrivateAssets="all" />
+   </ItemGroup>
+
+   <!--<ItemGroup>
+	  <ProjectReference Include="..\Kinlo.SharedBase\Kinlo.SharedBase.csproj" />
+	</ItemGroup>-->
+</Project>

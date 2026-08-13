@@ -1,0 +1,96 @@
+﻿<ListView
+    x:Class="Kinlo.GUI.View.Parts.LogWebLogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View.Parts"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="Transparent"
+    BorderThickness="0"
+    IsEnabled="True"
+    ItemContainerStyle="{StaticResource LogListViewItemStyle}"
+    ItemsSource="{Binding Logs}"
+    VirtualizingStackPanel.IsVirtualizing="True"
+    VirtualizingStackPanel.VirtualizationMode="Recycling"
+    mc:Ignorable="d"
+>
+    <ListView.View>
+        <GridView>
+            <GridView.Columns>
+                <GridViewColumn Width="35">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="17"
+                                    Foreground="Red"
+                                    Text="&#xe724;"
+                                    Visibility="{Binding ErrVisibility}"
+                                />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="15"
+                                    Foreground="Orange"
+                                    Text="&#xe6aa;"
+                                    Visibility="{Binding WarningVisibility}"
+                                />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="17"
+                                    Foreground="{DynamicResource SuccessBrush}"
+                                    Text="&#xe730;"
+                                    Visibility="{Binding SuccessVisibility}"
+                                />
+                            </Grid>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn DisplayMemberBinding="{Binding Status}" Header="{DynamicResource 状态}" />
+                <GridViewColumn DisplayMemberBinding="{Binding InterfaceName}" Header="{DynamicResource 接口}" />
+                <GridViewColumn DisplayMemberBinding="{Binding Barcode}" Header="{DynamicResource 条码}" />
+                <GridViewColumn Header="{DynamicResource 接收报文}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <hc:SimpleText
+                                MaxWidth="500"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=Foreground}"
+                                Text="{Binding RequestedMsg}"
+                                TextWrapping="Wrap"
+                            />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn Header="{DynamicResource 回复报文}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <hc:SimpleText
+                                MaxWidth="500"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=Foreground}"
+                                Text="{Binding ResponseMsg}"
+                                TextWrapping="Wrap"
+                            />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn DisplayMemberBinding="{Binding StartTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss fff}}" Header="{DynamicResource 开始时间}" />
+                <GridViewColumn DisplayMemberBinding="{Binding EndTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss fff}}" Header="{DynamicResource 结束时间}" />
+                <GridViewColumn DisplayMemberBinding="{Binding Spending}" Header="{DynamicResource 耗时(ms)}" />
+                <GridViewColumn DisplayMemberBinding="{Binding Url}" Header="Url" />
+            </GridView.Columns>
+        </GridView>
+    </ListView.View>
+</ListView>

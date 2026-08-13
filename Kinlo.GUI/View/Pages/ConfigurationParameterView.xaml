@@ -1,0 +1,333 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.ConfigurationParameterView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignInstance vm:ConfigurationParameterViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource TitleSpace}" />
+            <RowDefinition Height="{StaticResource MainSpace}" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Border
+            Grid.ColumnSpan="5"
+            Padding="{StaticResource TitlePadding1}"
+            Background="{DynamicResource RegionBrush}"
+            CornerRadius="{DynamicResource MainCornerRadius}">
+            <Grid>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,50,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{DynamicResource TextBlockTitleBold}"
+                        Text="{DynamicResource 参数配置}" />
+                    <TextBlock
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontSize="25"
+                        Foreground="{DynamicResource PrimaryBrush}">
+                        <Run Text="当前使用配方" />
+                        <Run Text="：[" />
+                        <Run Text="{Binding Parameter.RecipeName, Mode=OneWay}" />
+                        <Run Text="]" />
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <hc:ComboBox
+                        MinWidth="260"
+                        VerticalAlignment="Center"
+                        hc:BorderElement.CornerRadius="4 0 0 4"
+                        hc:TitleElement.Foreground="{StaticResource PrimaryBrush}"
+                        hc:TitleElement.Title="{DynamicResource 选择配方}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        ItemsSource="{Binding OtherParameter.OtherParameter.Recipes}"
+                        SelectedValue="{Binding SelectedRecipe}" />
+                    <Button
+                        Margin="0,0,10,0"
+                        hc:BorderElement.CornerRadius="0 4 4 0"
+                        Command="{s:Action ReplaceCmd}"
+                        Content="应用所选配方"
+                        Style="{StaticResource ButtonPrimary}" />
+                    <ToggleButton
+                        Name="toggleBt"
+                        Height="30"
+                        Margin="0,0,0,0"
+                        Padding="15,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        hc:BorderElement.CornerRadius="4 0 0 4"
+                        Style="{StaticResource ToggleButtonInfo}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,8,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="/Font/#iconfont"
+                                FontSize="16"
+                                Text="&#xe62b;" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Text="{DynamicResource 新建配方}" />
+                        </StackPanel>
+                    </ToggleButton>
+                    <Popup
+                        x:Name="popup"
+                        AllowsTransparency="True"
+                        IsOpen="{Binding ElementName=toggleBt, Path=IsChecked}"
+                        Placement="Bottom"
+                        PlacementTarget="{Binding ElementName=toggleBt}"
+                        PopupAnimation="Slide"
+                        StaysOpen="False"
+                        VerticalOffset="10">
+                        <Border
+                            Width="300"
+                            Margin="30"
+                            Background="White"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5"
+                            Effect="{StaticResource EffectShadow3}">
+                            <Grid>
+                                <TextBlock
+                                    Margin="10"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Style="{StaticResource TextBlockSubTitle}"
+                                    Text="{DynamicResource 新建配方}" />
+                                <ToggleButton
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,5,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Content="&#xe657;"
+                                    FontFamily="/Font/#iconfont"
+                                    FontSize="20"
+                                    Foreground="{StaticResource DangerBrush}"
+                                    IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Popup}, Path=IsOpen}"
+                                    Style="{StaticResource ToggleButtonCustom}" />
+                                <Grid Margin="20,50,20,20">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <hc:TextBox
+                                        Grid.Row="0"
+                                        Height="25"
+                                        Margin="0,10"
+                                        HorizontalAlignment="Stretch"
+                                        hc:TitleElement.Title="{DynamicResource 配方名称}"
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        hc:TitleElement.TitleWidth="80"
+                                        Text="{Binding NewRecipeName}" />
+                                    <ToggleButton
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Margin="0,10"
+                                        HorizontalAlignment="Stretch"
+                                        Command="{s:Action CreateRecipeCMD}"
+                                        CommandParameter="0"
+                                        Content="{DynamicResource 确定}"
+                                        IsChecked="{Binding ElementName=popup, Path=IsOpen}"
+                                        Style="{StaticResource ToggleButtonSuccess}" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Popup>
+
+                    <ToggleButton
+                        Height="30"
+                        Margin="0,0,10,0"
+                        Padding="15,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        hc:BorderElement.CornerRadius="0 4 4 0"
+                        Command="{s:Action DeleteCMD}"
+                        Style="{StaticResource ToggleButtonDanger}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,8,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="/Font/#iconfont"
+                                FontSize="16"
+                                Text="&#xe648;" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                kc:LanguageResource.Key="删除所选配方"
+                                FontSize="14" />
+                        </StackPanel>
+                    </ToggleButton>
+                    <Button
+                        Width="100"
+                        Height="30"
+                        Margin="0,0,0,0"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{s:Action SaveCMD}"
+                        Style="{StaticResource ButtonSuccess}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,8,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="/Font/#iconfont"
+                                FontSize="16"
+                                Text="&#xe61b;" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Text="{DynamicResource 保存}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Grid
+            x:Name="df"
+            Grid.Row="2"
+            Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="{StaticResource MainSpace}" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="{StaticResource MainSpace}" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="{StaticResource MainSpace}" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <GridSplitter
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+            <GridSplitter
+                Grid.Column="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+            <GridSplitter
+                Grid.Column="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+            <Border
+                Grid.Column="0"
+                Padding="15,25,15,15"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid>
+                    <RadioButton
+                        Grid.Column="0"
+                        Height="19"
+                        Padding="5,-2,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        Content="{DynamicResource 基本参数}"
+                        FontSize="18"
+                        GroupName="group1"
+                        IsChecked="True"
+                        Style="{StaticResource RadioButtonIconBaseStyle}" />
+                    <hc:ScrollViewer
+                        Margin="0,45,0,0"
+                        VerticalAlignment="Stretch"
+                        Content="{Binding DeviceParameterPanel}" />
+                </Grid>
+            </Border>
+            <Border
+                Grid.Column="2"
+                Padding="15,25,15,15"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid>
+                    <RadioButton
+                        Grid.Column="2"
+                        Height="19"
+                        Padding="5,-2,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        Content="{DynamicResource 运行参数}"
+                        FontSize="18"
+                        GroupName="group2"
+                        IsChecked="True"
+                        Style="{StaticResource RadioButtonIconBaseStyle}" />
+                    <hc:ScrollViewer
+                        Margin="0,45,0,0"
+                        VerticalAlignment="Stretch"
+                        Content="{Binding RunParameterPanel}" />
+                </Grid>
+            </Border>
+            <Border
+                Grid.Column="4"
+                MinHeight="200"
+                Padding="15,25,15,15"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid>
+                    <RadioButton
+                        Grid.Column="4"
+                        Height="19"
+                        Padding="5,-2,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        Content="{DynamicResource 功能启用}"
+                        FontSize="18"
+                        IsChecked="True"
+                        Style="{StaticResource RadioButtonIconBaseStyle}" />
+                    <hc:ScrollViewer
+                        Margin="0,45,0,0"
+                        VerticalAlignment="Stretch"
+                        Content="{Binding FunctionEnablePanel}" />
+                </Grid>
+            </Border>
+            <Border
+                Grid.Column="6"
+                Padding="15,25,15,15"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid>
+                    <RadioButton
+                        Grid.Column="4"
+                        Height="19"
+                        Padding="5,-2,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        Content="{DynamicResource 高级设置}"
+                        FontSize="18"
+                        IsChecked="True"
+                        Style="{StaticResource RadioButtonIconBaseStyle}" />
+                    <hc:ScrollViewer
+                        Margin="0,45,0,0"
+                        VerticalAlignment="Stretch"
+                        Content="{Binding AdvancedConfigPanel}" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

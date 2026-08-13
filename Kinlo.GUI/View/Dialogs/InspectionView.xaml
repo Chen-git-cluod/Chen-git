@@ -1,0 +1,361 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.InspectionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Title="仪器点检"
+    Width="1200"
+    MinHeight="500"
+    d:DataContext="{d:DesignInstance vm:InspectionViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    SizeToContent="Height"
+    mc:Ignorable="d"
+>
+    <Grid Margin="30,20,30,30">
+        <TabControl x:Name="tabControl" BorderThickness="0" Style="{StaticResource TabControlSliding}">
+            <TabItem
+                Width="120"
+                DataContext="{Binding InspectionParameter.BeforeScanBarcodeParameter}"
+                Header="{Binding Process}"
+                Visibility="{Binding Visible}"
+            >
+                <Grid Margin="0,20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <hc:TextBox
+                            Width="120"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:TitleElement.Title="通道数："
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding SetLaneCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                        <hc:TextBox
+                            Width="200"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Left"
+                            hc:TitleElement.Title="扫码枪一次扫码个数："
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+                        <Button
+                            VerticalAlignment="Center"
+                            Command="{s:Action SaveCmd}"
+                            CommandParameter="{Binding ElementName=tabControl}"
+                            Content="保存设置"
+                            Style="{DynamicResource ButtonPrimary}"
+                        />
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" Margin="0,12,0,0" ItemsSource="{Binding Lanes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Index, StringFormat={}{0}通道}" />
+                                    <hc:TextBox
+                                        Grid.Column="2"
+                                        hc:TitleElement.Title="实际条码："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        IsReadOnly="True"
+                                        Text="{Binding CurrentValue}"
+                                    />
+                                    <hc:TextBox
+                                        Grid.Column="4"
+                                        hc:TitleElement.Title="设定条码："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        Text="{Binding TragetValue}"
+                                    />
+                                    <CheckBox Grid.Column="6" Content="是否通过" IsChecked="{Binding IsSuccess}" IsEnabled="False" />
+                                    <hc:TextBox
+                                        Grid.Column="8"
+                                        hc:TitleElement.Title="点检时间："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        IsReadOnly="True"
+                                        Text="{Binding UpdateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                    />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </TabItem>
+            <TabItem Width="120" DataContext="{Binding InspectionParameter.ShortCircuitParameter}" Header="{Binding Process}" Visibility="{Binding Visible}">
+                <Grid Margin="0,20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <hc:TextBox
+                            Width="120"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:TitleElement.Title="通道数："
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding SetLaneCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <Button
+                            VerticalAlignment="Center"
+                            Command="{s:Action SaveCmd}"
+                            CommandParameter="{Binding ElementName=tabControl}"
+                            Content="保存设置"
+                            Style="{DynamicResource ButtonPrimary}"
+                        />
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" Margin="0,12,0,0" ItemsSource="{Binding Lanes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Index, StringFormat={}{0}通道}" />
+                                    <hc:TextBox
+                                        Grid.Column="2"
+                                        Grid.ColumnSpan="3"
+                                        hc:TitleElement.Title="测短路信息："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        Text="{Binding CurrentValue}"
+                                    />
+                                    <CheckBox Grid.Column="6" Content="是否通过" IsChecked="{Binding IsSuccess}" IsEnabled="False" />
+                                    <hc:TextBox
+                                        Grid.Column="8"
+                                        hc:TitleElement.Title="点检时间："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        IsReadOnly="True"
+                                        Text="{Binding UpdateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                    />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </TabItem>
+            <TabItem Width="120" DataContext="{Binding InspectionParameter.TestVoltageParameter}" Header="{Binding Process}" Visibility="{Binding Visible}">
+                <Grid Margin="0,20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <hc:TextBox
+                            Width="120"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:TitleElement.Title="通道数："
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding SetLaneCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <Button
+                            VerticalAlignment="Center"
+                            Command="{s:Action SaveCmd}"
+                            CommandParameter="{Binding ElementName=tabControl}"
+                            Content="保存设置"
+                            Style="{DynamicResource ButtonPrimary}"
+                        />
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" Margin="0,12,0,0" ItemsSource="{Binding Lanes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Index, StringFormat={}{0}通道}" />
+                                    <hc:TextBox
+                                        Grid.Column="2"
+                                        hc:TitleElement.Title="实际电压："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        Text="{Binding CurrentValue}"
+                                    />
+                                    <hc:TextBox Grid.Column="4" hc:TitleElement.Title="上限：" hc:TitleElement.TitlePlacement="Left" Text="{Binding Upper}" />
+                                    <hc:TextBox Grid.Column="6" hc:TitleElement.Title="下限：" hc:TitleElement.TitlePlacement="Left" Text="{Binding Lower}" />
+                                    <CheckBox Grid.Column="8" Content="是否通过" IsChecked="{Binding IsSuccess}" IsEnabled="False" />
+                                    <hc:TextBox
+                                        Grid.Column="10"
+                                        hc:TitleElement.Title="点检时间："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        IsReadOnly="True"
+                                        Text="{Binding UpdateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                    />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </TabItem>
+            <TabItem Width="120" DataContext="{Binding InspectionParameter.BeforeWeighParameter}" Header="{Binding Process}" Visibility="{Binding Visible}">
+                <Grid Margin="0,20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <hc:TextBox
+                            Width="120"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:TitleElement.Title="通道数："
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding SetLaneCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <Button
+                            VerticalAlignment="Center"
+                            Command="{s:Action SaveCmd}"
+                            CommandParameter="{Binding ElementName=tabControl}"
+                            Content="保存设置"
+                            Style="{DynamicResource ButtonPrimary}"
+                        />
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" Margin="0,12,0,0" ItemsSource="{Binding Lanes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Index, StringFormat={}{0}通道}" />
+                                    <hc:TextBox
+                                        Grid.Column="2"
+                                        hc:TitleElement.Title="实际重量："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        Text="{Binding CurrentValue}"
+                                    />
+                                    <hc:TextBox Grid.Column="4" hc:TitleElement.Title="上限：" hc:TitleElement.TitlePlacement="Left" Text="{Binding Upper}" />
+                                    <hc:TextBox Grid.Column="6" hc:TitleElement.Title="下限：" hc:TitleElement.TitlePlacement="Left" Text="{Binding Lower}" />
+                                    <CheckBox Grid.Column="8" Content="是否通过" IsChecked="{Binding IsSuccess}" IsEnabled="False" />
+                                    <hc:TextBox
+                                        Grid.Column="10"
+                                        hc:TitleElement.Title="点检时间："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        IsReadOnly="True"
+                                        Text="{Binding UpdateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                    />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </TabItem>
+            <TabItem Width="120" DataContext="{Binding InspectionParameter.AfterWeighParameter}" Header="{Binding Process}" Visibility="{Binding Visible}">
+                <Grid Margin="0,20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <hc:TextBox
+                            Width="120"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            hc:TitleElement.Title="通道数："
+                            hc:TitleElement.TitlePlacement="Left"
+                            Text="{Binding SetLaneCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+
+                        <Button
+                            VerticalAlignment="Center"
+                            Command="{s:Action SaveCmd}"
+                            CommandParameter="{Binding ElementName=tabControl}"
+                            Content="保存设置"
+                            Style="{DynamicResource ButtonPrimary}"
+                        />
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" Margin="0,12,0,0" ItemsSource="{Binding Lanes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Index, StringFormat={}{0}通道}" />
+                                    <hc:TextBox
+                                        Grid.Column="2"
+                                        hc:TitleElement.Title="实际重量："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        Text="{Binding CurrentValue}"
+                                    />
+                                    <hc:TextBox Grid.Column="4" hc:TitleElement.Title="上限：" hc:TitleElement.TitlePlacement="Left" Text="{Binding Upper}" />
+                                    <hc:TextBox Grid.Column="6" hc:TitleElement.Title="下限：" hc:TitleElement.TitlePlacement="Left" Text="{Binding Lower}" />
+                                    <CheckBox Grid.Column="8" Content="是否通过" IsChecked="{Binding IsSuccess}" IsEnabled="False" />
+                                    <hc:TextBox
+                                        Grid.Column="10"
+                                        hc:TitleElement.Title="点检时间："
+                                        hc:TitleElement.TitlePlacement="Left"
+                                        IsReadOnly="True"
+                                        Text="{Binding UpdateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                    />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

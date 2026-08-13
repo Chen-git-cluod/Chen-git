@@ -1,0 +1,32 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.HipotCurveView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hel="clr-namespace:Kinlo.GUI.Helpers"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Hipot波形"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <Grid x:Name="grid">
+        <lvc:CartesianChart
+            x:Name="mychart"
+            Title="{Binding Title}"
+            Grid.Row="1"
+            Margin="5,5,5,5"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            AnimationsSpeed="0"
+            LegendPosition="Bottom"
+            LegendTextPaint="{x:Static hel:Common.TextPaint}"
+            Series="{Binding ChatSeries}"
+            TooltipPosition="Right"
+            TooltipTextPaint="{x:Static hel:Common.TextPaint}"
+            XAxes="{Binding XAxes}"
+            YAxes="{Binding YAxes}"
+            ZoomMode="X" />
+    </Grid>
+</Window>

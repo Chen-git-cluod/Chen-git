@@ -1,0 +1,462 @@
+﻿<UserControl
+  x:Class="Kinlo.GUI.View.ConfigurationInteractionSignalView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:hc="https://handyorg.github.io/handycontrol"
+  xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+  xmlns:local="clr-namespace:Kinlo.GUI.View"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:s="https://github.com/canton7/Stylet"
+  xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+  d:DataContext="{d:DesignInstance vm:ConfigurationInteractionSignalViewModel}"
+  d:DesignHeight="800"
+  d:DesignWidth="1600"
+  mc:Ignorable="d">
+  <UserControl.Resources>
+    <cvt:PlcInteractAddressConverter x:Key="PlcInteractAddressConverter" />
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="{StaticResource TitleSpace}" />
+      <RowDefinition Height="{StaticResource MainSpace}" />
+      <RowDefinition Height="200" />
+      <RowDefinition Height="{StaticResource MainSpace}" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition Width="{StaticResource MainSpace}" />
+      <ColumnDefinition Width=".8*" />
+    </Grid.ColumnDefinitions>
+    <Border
+      Grid.Row="0"
+      Grid.ColumnSpan="3"
+      Padding="{StaticResource TitlePadding1}"
+      Background="{DynamicResource RegionBrush}"
+      CornerRadius="{DynamicResource MainCornerRadius}">
+      <Grid>
+        <TextBlock
+          Margin="0,0,0,0"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Center"
+          Style="{DynamicResource TextBlockTitleBold}"
+          Text="{DynamicResource 信号配置}" />
+        <StackPanel
+          Margin="0,0,0,0"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Center"
+          Orientation="Horizontal" />
+      </Grid>
+    </Border>
+    <Border
+      Grid.Row="2"
+      Grid.Column="0"
+      Padding="{StaticResource TitlePadding2}"
+      Background="{DynamicResource RegionBrush}"
+      CornerRadius="{DynamicResource MainCornerRadius}">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="30" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+          <TextBlock
+            HorizontalAlignment="Left"
+            Style="{StaticResource TextBlockSubTitleBold}"
+            Text="{DynamicResource PLC服务}" />
+          <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button
+              hc:BorderElement.CornerRadius="4 0 0 4"
+              Command="{s:Action AddScanSignalCMD}"
+              Content="{DynamicResource 新建服务}"
+              Style="{StaticResource ButtonPrimary}" />
+            <Button
+              hc:BorderElement.CornerRadius="0 4 4 0"
+              Command="{s:Action InputStartListCMD}"
+              CommandParameter="{Binding ElementName=listView}"
+              Content="{DynamicResource 导入服务触发信号列表}"
+              Style="{StaticResource ButtonSuccess}" />
+          </StackPanel>
+        </Grid>
+
+        <ListView
+          x:Name="listView"
+          Grid.Row="1"
+          d:ItemsSource="{d:SampleData ItemCount=5}"
+          Background="Transparent"
+          BorderThickness="0"
+          ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+          ItemsSource="{Binding PLCSignal.PLCScanSignals}"
+          MouseDoubleClick="{s:Action ScanSignalCMD_MouseDoubleClick}"
+          SelectionChanged="{s:Action listView_SelectionChanged}">
+          <ListView.ContextMenu>
+            <ContextMenu>
+              <MenuItem Command="{s:Action AddScanSignalCMD}" Header="{DynamicResource 新建}" />
+              <MenuItem
+                Command="{s:Action EditScanSignalCMD}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 编辑}" />
+              <MenuItem
+                Command="{s:Action DeleteSelectScanSignalCMD}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 删 除}" />
+            </ContextMenu>
+          </ListView.ContextMenu>
+          <ListView.View>
+            <GridView>
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ServiceName}"
+                Header="{DynamicResource 服务名称}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding DeviceCommunicationType}"
+                Header="{DynamicResource 设备通信类型}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding AddressStart.Lable}"
+                Header="{DynamicResource 起始标签}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding LengthSignal}"
+                Header="{DynamicResource 信号长度}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding LengthResection}"
+                Header="{DynamicResource 切除长度}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding AddressingMethod}"
+                Header="{DynamicResource 寻址方式}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding Heartbeat.Lable}"
+                Header="{DynamicResource 心跳标签}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding HeartbeatIntervalMs}"
+                Header="{DynamicResource 心跳时间(ms)：}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding Status.Lable}"
+                Header="{DynamicResource PLC状态}" />
+            </GridView>
+          </ListView.View>
+        </ListView>
+      </Grid>
+    </Border>
+    <Border
+      Grid.Row="4"
+      Grid.Column="0"
+      Grid.ColumnSpan="3"
+      Padding="{StaticResource TitlePadding2}"
+      Background="{DynamicResource RegionBrush}"
+      CornerRadius="{DynamicResource MainCornerRadius}">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="30" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+          <TextBlock
+            HorizontalAlignment="Left"
+            kc:LanguageResource.Key="各工序交互信号"
+            Style="{StaticResource TextBlockSubTitleBold}" />
+          <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button
+              Command="{s:Action AddInteractCMD}"
+              Content="{DynamicResource 新建交互}"
+              Style="{StaticResource ButtonPrimary}" />
+            <Button
+              Margin="10,0,0,0"
+              Command="{s:Action PlcCommandTestCmd}"
+              Content="PLC测试"
+              Style="{StaticResource ButtonSuccess}" />
+          </StackPanel>
+        </Grid>
+        <ListView
+          Grid.Row="1"
+          d:ItemsSource="{d:SampleData ItemCount=5}"
+          Background="Transparent"
+          BorderThickness="0"
+          ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+          ItemsSource="{Binding PLCSignal.PLCInteractAddresses}"
+          MouseDoubleClick="{s:Action InteractCMD_MouseDoubleClick}">
+          <ListView.ContextMenu>
+            <ContextMenu>
+              <MenuItem
+                Command="{s:Action DisableCmd}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 禁用}" />
+              <MenuItem
+                Command="{s:Action EnableCmd}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 启用}" />
+              <MenuItem Command="{s:Action AddInteractCMD}" Header="{DynamicResource 新建}" />
+              <MenuItem
+                Command="{s:Action CopyInteractCMD}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 复制}" />
+
+              <MenuItem Command="{s:Action AggregateCMD}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}">
+                <MenuItem.Header>
+                  <WrapPanel VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource 累加复制}" />
+                    <hc:NumericUpDown
+                      MinWidth="58"
+                      Margin="5,0,0,0"
+                      VerticalAlignment="Center"
+                      Minimum="1"
+                      Value="{Binding AggregateValue}" />
+                  </WrapPanel>
+                </MenuItem.Header>
+              </MenuItem>
+              <MenuItem
+                Command="{s:Action EditInteractCMD}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 编辑}" />
+              <MenuItem
+                Command="{s:Action DeleteSelectInteractCMD}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 删除}" />
+            </ContextMenu>
+          </ListView.ContextMenu>
+          <ListView.View>
+            <GridView>
+              <GridViewColumn Header="{DynamicResource 启用}">
+                <GridViewColumn.CellTemplate>
+                  <DataTemplate>
+                    <CheckBox
+                      HorizontalAlignment="Right"
+                      Focusable="False"
+                      IsChecked="{Binding IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsHitTestVisible="False" />
+                  </DataTemplate>
+                </GridViewColumn.CellTemplate>
+              </GridViewColumn>
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ServiceName}"
+                Header="{DynamicResource 服务名称}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ProcessesType}"
+                Header="{DynamicResource 工序类型}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding DeviceCommunicationType}"
+                Header="{DynamicResource 设备通信类型}" />
+              <!--<GridViewColumn
+                            Width="Auto"
+                            DisplayMemberBinding="{Binding InjectPumpIndex}"
+                            Header="注液泵序" />-->
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding DeviceStartIndex}"
+                Header="{DynamicResource 起始索引}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding DataLength}"
+                Header="{DynamicResource 数量}" />
+              <!--<GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding RowCount}"
+                Header="{DynamicResource 行数}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ColumnCount}"
+                Header="{DynamicResource 列数}" />-->
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding StartCommand.Index}"
+                Header="{DynamicResource 启动命令索引}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding StartCommand.Tag.Lable}"
+                Header="{DynamicResource 启动命令标签}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding DataAddress.Lable}"
+                Header="{DynamicResource 取数据标签}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ExtraDataAddress.Lable}"
+                Header="{DynamicResource 备用数据标签}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ProductionDataType}"
+                Header="{DynamicResource 界面数据显示}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ProductionIndex}"
+                Header="{DynamicResource 生产顺序}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ExtensionProps, Converter={StaticResource PlcInteractAddressConverter}}"
+                Header="{DynamicResource 扩展}" />
+              <!--<GridViewColumn
+                            Width="Auto"
+                            DisplayMemberBinding="{Binding IsLastProcess}"
+                            Header="出站工序" />-->
+            </GridView>
+          </ListView.View>
+        </ListView>
+      </Grid>
+    </Border>
+    <Border
+      Grid.Row="2"
+      Grid.Column="2"
+      Grid.ColumnSpan="3"
+      Padding="{StaticResource TitlePadding2}"
+      Background="{DynamicResource RegionBrush}"
+      CornerRadius="{DynamicResource MainCornerRadius}">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="30" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+          <TextBlock
+            HorizontalAlignment="Left"
+            kc:LanguageResource.Key="自定义交互信号"
+            Style="{StaticResource TextBlockSubTitleBold}" />
+          <Button
+            HorizontalAlignment="Right"
+            Command="{s:Action AddCustomInteractCmd}"
+            Content="{DynamicResource 新建交互}"
+            Style="{StaticResource ButtonPrimary}" />
+        </Grid>
+        <ListView
+          Grid.Row="1"
+          d:ItemsSource="{d:SampleData ItemCount=5}"
+          Background="Transparent"
+          BorderThickness="0"
+          ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+          ItemsSource="{Binding PLCSignal.CustomPlcInteractAddresses}"
+          MouseDoubleClick="{s:Action Custom_MouseDoubleClick}">
+          <ListView.ContextMenu>
+            <ContextMenu>
+              <MenuItem Command="{s:Action AddCustomInteractCmd}" Header="{DynamicResource 新建}" />
+              <MenuItem
+                Command="{s:Action EditCustomInteractCmd}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 编辑}" />
+              <MenuItem
+                Command="{s:Action DeleteCustomCmd}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 删除}" />
+              <MenuItem
+                Command="{s:Action EnableCustomInteractCmd}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 启用}" />
+              <MenuItem
+                Command="{s:Action DisabledCustomInteractCmd}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                Header="{DynamicResource 禁用}" />
+            </ContextMenu>
+          </ListView.ContextMenu>
+          <ListView.View>
+            <GridView>
+              <GridViewColumn Header="{DynamicResource 启用}">
+                <GridViewColumn.CellTemplate>
+                  <DataTemplate>
+                    <CheckBox
+                      HorizontalAlignment="Right"
+                      Focusable="False"
+                      IsChecked="{Binding IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsHitTestVisible="False" />
+                  </DataTemplate>
+                </GridViewColumn.CellTemplate>
+              </GridViewColumn>
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding CustomInteractName}"
+                Header="交互名称" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding DataLength}"
+                Header="{DynamicResource 数量}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding DataAddress.Lable}"
+                Header="{DynamicResource 取数据标签}" />
+              <GridViewColumn
+                Width="Auto"
+                DisplayMemberBinding="{Binding ExtraDataAddress.Lable}"
+                Header="{DynamicResource 备用数据标签}" />
+            </GridView>
+          </ListView.View>
+        </ListView>
+      </Grid>
+    </Border>
+    <!--<Border
+            Grid.Row="2"
+            Grid.RowSpan="5"
+            Grid.Column="3"
+            Padding="{StaticResource TitlePadding2}"
+            Background="{DynamicResource RegionBrush}"
+            CornerRadius="{DynamicResource MainCornerRadius}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+    -->
+    <!--<TextBlock
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{Binding SelectedPLCScanSignal.ServiceName}" />-->
+    <!--
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource TextBlockSubTitle}"
+                        Text="{DynamicResource 切除信号}" />
+                </StackPanel>
+                <ListView
+                    Grid.Row="1"
+                    d:ItemsSource="{d:SampleData ItemCount=5}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+                    ItemsSource="{Binding SelectedPLCScanSignal.PLCResections}">
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{s:Action AddResectionSignalCMD}" Header="{DynamicResource 新建}" />
+                            <MenuItem
+                                Command="{s:Action EditResectionSignalCMD}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                Header="{DynamicResource 编辑}" />
+                            <MenuItem
+                                Command="{s:Action DeleteSelectResectionSignalCMD}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                Header="{DynamicResource 删 除}" />
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                Width="Auto"
+                                DisplayMemberBinding="{Binding Index}"
+                                Header="{DynamicResource 索引}" />
+                            <GridViewColumn
+                                Width="Auto"
+                                DisplayMemberBinding="{Binding Tag.Lable}"
+                                Header="{DynamicResource 切除工序}" />
+                            <GridViewColumn Header="{DynamicResource 启用}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding IsEnabled}" IsEnabled="False" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+
+                </ListView>
+            </Grid>
+        </Border>-->
+  </Grid>
+</UserControl>

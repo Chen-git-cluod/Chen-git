@@ -1,0 +1,91 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.MaterialLoadView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Title="{DynamicResource 原材料上卸料}"
+    Width="500"
+    d:DataContext="{d:DesignInstance vm:MaterialLoadViewModel}"
+    Background="{DynamicResource RegionBrush}"
+    SizeToContent="Height"
+    mc:Ignorable="d"
+>
+    <StackPanel Margin="30">
+        <hc:TextBox
+            Height="80"
+            Margin="0,15,0,0"
+            hc:TitleElement.Title="{DynamicResource 扫码}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="100"
+            AcceptsReturn="True"
+            Text="{Binding Code}"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+        />
+        <Button
+            Width="100"
+            Margin="0,10,0,20"
+            HorizontalAlignment="Right"
+            Command="{s:Action AnalysisCMD}"
+            Content="{DynamicResource 解析}"
+            IsEnabled="{Binding IsSendFinish}"
+            Style="{StaticResource ButtonPrimary}"
+        />
+        <hc:ComboBox
+            Margin="0,5"
+            hc:TitleElement.Title="{DynamicResource 类型}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="100"
+            ItemsSource="{Binding MaterialTypes}"
+            SelectedValue="{Binding MaterialType}"
+        />
+        <hc:TextBox
+            Margin="0,5"
+            hc:InfoElement.Placeholder="{DynamicResource 必填}"
+            hc:TitleElement.Title="{DynamicResource 原材料批次号}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="100"
+            Text="{Binding MaterialBatchCode}"
+        />
+        <hc:TextBox
+            Margin="0,5"
+            hc:InfoElement.Placeholder="{DynamicResource 非必填}"
+            hc:TitleElement.Title="{DynamicResource 原材料编码}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="100"
+            Text="{Binding MaterialCode}"
+        />
+        <hc:TextBox
+            Margin="0,5"
+            hc:InfoElement.Placeholder="{DynamicResource 非必填}"
+            hc:TitleElement.Title="{DynamicResource 原材料数量}"
+            hc:TitleElement.TitlePlacement="Left"
+            hc:TitleElement.TitleWidth="100"
+            Text="{Binding Quantity}"
+        />
+        <UniformGrid Margin="100,5,0,0" Columns="3">
+            <CheckBox Content="{DynamicResource 上传MES}" IsChecked="{Binding IsSendMES, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button
+                Margin="3,0"
+                HorizontalAlignment="Stretch"
+                Command="{s:Action MaterialLoadCMD}"
+                Content="{DynamicResource 上料}"
+                IsEnabled="{Binding IsSendFinish}"
+                Style="{StaticResource ButtonPrimary}"
+            />
+            <Button
+                Margin="6,0,0,0"
+                HorizontalAlignment="Stretch"
+                Command="{s:Action MaterialUnLoadCMD}"
+                Content="{DynamicResource 卸料}"
+                IsEnabled="{Binding IsSendFinish}"
+                Style="{StaticResource ButtonDanger}"
+            />
+        </UniformGrid>
+    </StackPanel>
+</Window>

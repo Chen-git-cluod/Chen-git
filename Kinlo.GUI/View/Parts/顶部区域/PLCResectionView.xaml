@@ -1,0 +1,65 @@
+﻿<Border
+    x:Class="Kinlo.GUI.View.PLCResectionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View.Parts"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignInstance vm:PLCResectionViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    CornerRadius="5"
+    mc:Ignorable="d"
+>
+    <Border.OpacityMask>
+        <VisualBrush>
+            <VisualBrush.Visual>
+                <Border
+                    Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Border}, Path=ActualWidth}"
+                    Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Border}, Path=ActualHeight}"
+                    Background="Black"
+                    CornerRadius="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=CornerRadius}"
+                />
+            </VisualBrush.Visual>
+        </VisualBrush>
+    </Border.OpacityMask>
+    <Border.Resources>
+        <cvt:MultipleResectionToVisibilityConverter x:Key="MultipleResectionToVisibilityConverter" />
+    </Border.Resources>
+    <hc:ScrollViewer HorizontalScrollBarVisibility="Visible">
+        <ItemsControl ItemsSource="{Binding PLCSignal.PLCScanSignals}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl Grid.Column="1" ItemsSource="{Binding PLCResections}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="1,0" Padding="5" Background="OrangeRed" CornerRadius="5">
+                                    <Border.Visibility>
+                                        <MultiBinding Converter="{StaticResource MultipleResectionToVisibilityConverter}">
+                                            <Binding Path="IsEnabled" />
+                                            <Binding Path="IsExcision" />
+                                        </MultiBinding>
+                                    </Border.Visibility>
+                                    <hc:SimpleText Margin="3,0" Foreground="White" Text="{Binding Tag}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </hc:ScrollViewer>
+</Border>

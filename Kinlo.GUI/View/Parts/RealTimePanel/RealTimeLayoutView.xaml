@@ -1,0 +1,115 @@
+﻿<Grid
+  x:Class="Kinlo.GUI.View.RealTimeLayoutView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:hc="https://handyorg.github.io/handycontrol"
+  xmlns:local="clr-namespace:Kinlo.GUI.View"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:s="https://github.com/canton7/Stylet"
+  Margin="0,0,0,0"
+  HorizontalAlignment="Stretch"
+  VerticalAlignment="Stretch"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d">
+  <Grid.ColumnDefinitions>
+    <ColumnDefinition />
+    <ColumnDefinition Width="auto" />
+  </Grid.ColumnDefinitions>
+  <ContentControl s:View.Model="{Binding PanelViewModel}" />
+  <Rectangle
+    Grid.Row="0"
+    Width="1"
+    HorizontalAlignment="Right"
+    VerticalAlignment="Stretch"
+    Fill="{DynamicResource BorderBrush}" />
+  <Grid Grid.Column="1" Margin="0,0,0,0">
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <RadioButton
+      Margin="0"
+      Padding="0"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch"
+      hc:BorderElement.CornerRadius="8 0 0 0"
+      Background="{DynamicResource RegionBrush}"
+      BorderThickness="0"
+      Command="{s:Action RealPanelCmd}"
+      GroupName="group"
+      IsChecked="True"
+      Style="{StaticResource ToggleButtonCustom}">
+      <RadioButton.LayoutTransform>
+        <RotateTransform Angle="90" />
+      </RadioButton.LayoutTransform>
+      <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="auto" />
+          <RowDefinition Height="3" />
+        </Grid.RowDefinitions>
+        <TextBlock
+          Margin="0,3"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Top"
+          FontSize="14"
+          FontWeight="Bold"
+          Text="实时数据面板" />
+        <Rectangle
+          Grid.Row="1"
+          Width="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=ActualWidth}"
+          Height="2"
+          Margin="0,0,0,0"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          Fill="{StaticResource PrimaryBrush}"
+          Visibility="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=IsChecked, Converter={StaticResource Boolean2VisibilityConverter}}" />
+      </Grid>
+    </RadioButton>
+    <RadioButton
+      Grid.Row="1"
+      Margin="0"
+      Padding="0"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch"
+      hc:BorderElement.CornerRadius="0 8 0 0"
+      Background="{DynamicResource RegionBrush}"
+      BorderThickness="0,0,0,0"
+      Command="{s:Action EnergyConsumptionCmd}"
+      GroupName="group"
+      Style="{StaticResource ToggleButtonCustom}">
+      <RadioButton.LayoutTransform>
+        <RotateTransform Angle="90" />
+      </RadioButton.LayoutTransform>
+      <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="auto" />
+          <RowDefinition Height="3" />
+        </Grid.RowDefinitions>
+        <TextBlock
+          Margin="0,3"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          FontSize="14"
+          FontWeight="Bold"
+          Text="能源消耗面板" />
+        <Rectangle
+          Grid.Row="1"
+          Width="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=ActualWidth}"
+          Height="2"
+          Margin="0,0,0,0"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          Fill="{StaticResource PrimaryBrush}"
+          Visibility="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=IsChecked, Converter={StaticResource Boolean2VisibilityConverter}}" />
+      </Grid>
+    </RadioButton>
+    <Rectangle
+      Grid.Row="0"
+      Height="1"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Bottom"
+      Fill="{DynamicResource BorderBrush}" />
+  </Grid>
+</Grid>

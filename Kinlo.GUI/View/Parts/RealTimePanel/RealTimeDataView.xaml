@@ -1,0 +1,734 @@
+﻿<Border
+    x:Class="Kinlo.GUI.View.RealTimeDataView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    d:DataContext="{d:DesignInstance vm:RealTimeDataViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="{DynamicResource RegionBrush}"
+    CornerRadius="8 0 0 8"
+    mc:Ignorable="d">
+    <Border.Resources>
+        <cvt:ProductionTypeToVIsibilityConverter x:Key="ProductionTypeToVIsibilityConverter" />
+    </Border.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Margin="15,10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Margin="0,0,20,0"
+                VerticalAlignment="Center"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="{DynamicResource PrimaryBrush}"
+                Text="{Binding AppGlobal.ShiftSwitchInfo.Shift}" />
+            <TextBlock
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                FontSize="14">
+                <Run Text="{DynamicResource 统计开始时间}" />
+                <Run Text=":" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding AppGlobal.ShiftSwitchInfo.LastResetTime, StringFormat=MM/dd HH:mm:ss}" />
+            </TextBlock>
+            <TextBlock
+                Grid.Column="2"
+                Margin="0,0"
+                VerticalAlignment="Center"
+                FontSize="14">
+                <Run Text="{DynamicResource 进站}" />
+                <Run Text=":" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding DisplayRatio.ProductionCounter.InputCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </TextBlock>
+            <TextBlock
+                Grid.Column="3"
+                Margin="20,0,30,0"
+                VerticalAlignment="Center"
+                FontSize="14">
+                <Run Text="{DynamicResource 出站}" />
+                <Run Text=":" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding DisplayRatio.ProductionCounter.OutputCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </TextBlock>
+            <Button
+                Grid.Column="4"
+                Margin="0,0,0,0"
+                Command="{s:Action ZeroingCMD}"
+                Style="{StaticResource ButtonCustom}"
+                ToolTip="重置"
+                Visibility="Collapsed"
+                >
+                
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Top"
+                        FontFamily="/Font/#iconfont"
+                        FontSize="22"
+                        Foreground="Red"
+                        Text="&#xe69c;" />
+                </StackPanel>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid Visibility="{Binding Parameter.AdvancedConfig.ProductionType, Converter={StaticResource ProductionTypeToVIsibilityConverter}, ConverterParameter='一次注液,二次注液'}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="240" />
+                    <ColumnDefinition Width="210" />
+                </Grid.ColumnDefinitions>
+                <Rectangle
+                    Width="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    Fill="{DynamicResource BorderBrush}" />
+                <Rectangle
+                    Grid.Column="1"
+                    Width="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    Fill="{DynamicResource BorderBrush}" />
+                <Rectangle
+                    Grid.Column="1"
+                    Height="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Fill="{DynamicResource BorderBrush}" />
+                <Grid Margin="0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" VerticalAlignment="Center">
+                        <TextBlock
+                            Margin="0,5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Style="{DynamicResource TextBlockDefault}"
+                            Text="{Binding FinalInjectInfo.OkRatio, StringFormat={}{0}%}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Style="{DynamicResource TextBlockDefault}"
+                            Text="最终注液" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Style="{DynamicResource TextBlockDefault}"
+                            Text="合格率" />
+                    </StackPanel>
+                    <lvc:PieChart
+                        Grid.Row="0"
+                        Width="180"
+                        Height="180"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        InitialRotation="90"
+                        MaxAngle="360"
+                        MaxValue="100"
+                        MinValue="0"
+                        Series="{Binding FinalInjectInfo.InjectSeries}"
+                        TooltipPosition="Bottom"
+                        TooltipTextPaint="{Binding TextPaint}" />
+                    <Grid
+                        Grid.Row="1"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Width="10"
+                                Height="10"
+                                Margin="0,0"
+                                HorizontalAlignment="Stretch"
+                                Background="{Binding FinalInjectInfo.OKBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液合格" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding FinalInjectInfo.OkInjectCount}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding FinalInjectInfo.OkRatio, StringFormat={}{0}%}" />
+                        </Grid>
+                        <Grid Grid.Column="1" Margin="10,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Width="10"
+                                Height="10"
+                                Margin="0,0"
+                                HorizontalAlignment="Stretch"
+                                Background="{Binding FinalInjectInfo.UnderInjectBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液过少" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding FinalInjectInfo.UnderInjectCount}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding FinalInjectInfo.UnderInjectRatio, StringFormat={}{0}%}" />
+                        </Grid>
+                        <Grid Grid.Column="2" Margin="0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Width="10"
+                                Height="10"
+                                Margin="0,0"
+                                HorizontalAlignment="Stretch"
+                                Background="{Binding FinalInjectInfo.OverInjectBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液过多" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding FinalInjectInfo.OverInjectCount}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding FinalInjectInfo.OverRatio, StringFormat={}{0}%}" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel
+                            Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                Margin="0,5,0,5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="{Binding FirstInjectInfo.OkRatio, StringFormat={}{0}%}" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="首次注液" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="合格率" />
+                        </StackPanel>
+                        <lvc:PieChart
+                            Grid.Row="0"
+                            Width="130"
+                            Height="130"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            InitialRotation="90"
+                            MaxAngle="360"
+                            MaxValue="100"
+                            MinValue="0"
+                            Series="{Binding FirstInjectInfo.InjectSeries}"
+                            TooltipPosition="Bottom"
+                            TooltipTextPaint="{Binding TextPaint}" />
+                    </Grid>
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Width="68"
+                        Margin="10,0,10,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                        <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                            <Border
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Left"
+                                Background="{Binding FirstInjectInfo.OKBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液合格" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Run Text="{Binding FirstInjectInfo.OkInjectCount}" />
+                            <Run Text="-" />
+                            <Run Text="{Binding FirstInjectInfo.OkRatio, StringFormat={}{0}%}" />
+                        </TextBlock>
+
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <Border
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Left"
+                                Background="{Binding FirstInjectInfo.UnderInjectBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液过少" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Run Text="{Binding FirstInjectInfo.UnderInjectCount}" />
+                            <Run Text="-" />
+                            <Run Text="{Binding FirstInjectInfo.UnderInjectRatio, StringFormat={}{0}%}" />
+                        </TextBlock>
+
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <Border
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Left"
+                                Background="{Binding FirstInjectInfo.OverInjectBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液过多" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Run Text="{Binding FirstInjectInfo.OverInjectCount}" />
+                            <Run Text="-" />
+                            <Run Text="{Binding FirstInjectInfo.OverRatio, StringFormat={}{0}%}" />
+                        </TextBlock>
+                    </StackPanel>
+                    <Grid
+                        Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <StackPanel
+                            Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                Margin="0,5,0,5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="{Binding AutoReInjectInfo.OkRatio, StringFormat={}{0}%}" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="回流后注液" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="合格率" />
+                        </StackPanel>
+                        <lvc:PieChart
+                            Width="130"
+                            Height="130"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            InitialRotation="90"
+                            MaxAngle="360"
+                            MaxValue="100"
+                            MinValue="0"
+                            Series="{Binding AutoReInjectInfo.InjectSeries}"
+                            TooltipPosition="Bottom"
+                            TooltipTextPaint="{Binding TextPaint}" />
+                    </Grid>
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="68"
+                        Margin="10,0,10,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                        <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                            <Border
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Left"
+                                Background="{Binding AutoReInjectInfo.OKBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液合格" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Run Text="{Binding AutoReInjectInfo.OkInjectCount}" />
+                            <Run Text="-" />
+                            <Run Text="{Binding AutoReInjectInfo.OkRatio, StringFormat={}{0}%}" />
+                        </TextBlock>
+
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <Border
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Left"
+                                Background="{Binding AutoReInjectInfo.UnderInjectBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液过少" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Run Text="{Binding AutoReInjectInfo.UnderInjectCount}" />
+                            <Run Text="-" />
+                            <Run Text="{Binding AutoReInjectInfo.UnderInjectRatio, StringFormat={}{0}%}" />
+                        </TextBlock>
+
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <Border
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Left"
+                                Background="{Binding AutoReInjectInfo.OverInjectBrushe}"
+                                CornerRadius="0" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TextBlockDefault}"
+                                Text="注液过多" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Run Text="{Binding AutoReInjectInfo.OverInjectCount}" />
+                            <Run Text="-" />
+                            <Run Text="{Binding AutoReInjectInfo.OverRatio, StringFormat={}{0}%}" />
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1" Margin="20,10,20,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    kc:LanguageResource.Key="工序信息"
+                    FontSize="14"
+                    Foreground="{DynamicResource PrimaryBrush}" />
+                <Grid
+                    Grid.Row="1"
+                    Margin="10,15,10,5"
+                    VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="50" />
+                        <!--<ColumnDefinition Width="60" />-->
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Margin="3,0,0,0"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource PrimaryTextBrush}"
+                        Text="{DynamicResource 工序}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource PrimaryTextBrush}"
+                        Text="OK" />
+                    <TextBlock
+                        Grid.Column="2"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource PrimaryTextBrush}"
+                        Text="NG" />
+                    <TextBlock
+                        Grid.Column="3"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource PrimaryTextBrush}"
+                        Text="{DynamicResource 合格率}" />
+                    <!--<TextBlock
+                        Grid.Column="4"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Right"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource PrimaryTextBrush}"
+                        Text="{DynamicResource NG总占比}" />-->
+                </Grid>
+                <hc:ScrollViewer Grid.Row="2">
+                    <ItemsControl
+                        Margin="0,0,0,0"
+                        Padding="0"
+                        VerticalAlignment="Top"
+                        ItemsSource="{Binding DisplayRatio.ProcessRatios}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0" Visibility="{Binding Visibility}">
+                                    <ProgressBar
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="4"
+                                        Height="20"
+                                        Margin="0,1"
+                                        VerticalAlignment="Stretch"
+                                        hc:BorderElement.CornerRadius="10"
+                                        hc:VisualElement.Text=""
+                                        Background="{StaticResource DangerBrush}"
+                                        Style="{StaticResource ProgressBarInfo}"
+                                        Value="{Binding OkRatio, Mode=OneWay}" />
+                                    <Grid VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="50" />
+                                            <ColumnDefinition Width="50" />
+                                            <ColumnDefinition Width="50" />
+                                            <!--<ColumnDefinition Width="68" />-->
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            Foreground="White"
+                                            Text="{tools:ResourceBinding Process}" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Left"
+                                            Foreground="White"
+                                            Text="{Binding OkTotal, Mode=OneWay}" />
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            HorizontalAlignment="Left"
+                                            Foreground="White"
+                                            Text="{Binding NgTotal, Mode=OneWay}" />
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            HorizontalAlignment="Left"
+                                            Foreground="White"
+                                            Text="{Binding OkRatio, Mode=OneWay, StringFormat={}{0}%}" />
+                                        <!--<TextBlock
+                                            Grid.Column="4"
+                                            Margin="0,0,10,0"
+                                            HorizontalAlignment="Right"
+                                            Foreground="White"
+                                            Text="{Binding NgProportion, StringFormat={}{0}%}" />-->
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </hc:ScrollViewer>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Margin="20,0,0,0"
+                VerticalAlignment="Bottom"
+                FontSize="14"
+                Foreground="{DynamicResource PrimaryBrush}"
+                Text="24小时产量分布" />
+            <TextBlock
+                Grid.Column="1"
+                Margin="0,0,20,0"
+                VerticalAlignment="Bottom"
+                FontSize="13">
+                <Run Text="{DynamicResource 上一分钟产量}" />
+                <Run Text=":" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding DisplayRatio.Last24HourOutputValue.LastMinuteCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </TextBlock>
+            <TextBlock
+                Grid.Column="2"
+                Margin="0,0,30,0"
+                VerticalAlignment="Bottom"
+                FontSize="13">
+                <Run Text="{DynamicResource 当前分钟累计}" />
+                <Run Text=":" />
+                <Run Foreground="{DynamicResource PrimaryBrush}" Text="{Binding DisplayRatio.Last24HourOutputValue.LastMinuteCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </TextBlock>
+            <kc:HourlyTimeAxis
+                Grid.Row="1"
+                Grid.ColumnSpan="3"
+                Height="69"
+                Margin="0,15,0,20"
+                ItemsSource="{Binding DisplayRatio.Last24HourOutputValue.HourlyDatas}" />
+        </Grid>
+        <ContentControl
+            Grid.Row="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Content="{Binding ConfigPanelView}" />
+        <Rectangle
+            Height="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Fill="{DynamicResource BorderBrush}" />
+        <Rectangle
+            Grid.Row="1"
+            Height="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Fill="{DynamicResource BorderBrush}" />
+        <Rectangle
+            Grid.Row="2"
+            Height="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Fill="{DynamicResource BorderBrush}" />
+    </Grid>
+</Border>

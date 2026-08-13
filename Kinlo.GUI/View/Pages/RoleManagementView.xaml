@@ -1,0 +1,689 @@
+﻿<UserControl
+    x:Class="Kinlo.GUI.View.RoleManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:tools="clr-namespace:Kinlo.Common.Tools;assembly=Kinlo.Common"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    d:DataContext="{d:DesignInstance vm:RoleManagementViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <cvt:RoleToBoolConverter x:Key="RoleToBoolConverter" />
+        <cvt:LevelHighestToBoolConverter x:Key="LevelHighestToBoolConverter" />
+        <cvt:RoleAndBoolToArrayConverter x:Key="RoleAndBoolToArrayConverter" />
+    </UserControl.Resources>
+    <Grid x:Name="mainGrid" Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource TitleSpace}" />
+            <RowDefinition Height="{StaticResource MainSpace}" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <kc:SliderControl
+            Height="60"
+            Margin="0"
+            Padding="5"
+            CornerRadius="{DynamicResource MainCornerRadius}"
+            DisplayMemberPath="Name"
+            FontSize="18"
+            FontWeight="Bold"
+            ItemsSource="{Binding RoleCopy.Roles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedIndex="{Binding SelectIndex, Mode=TwoWay}"
+            SliderBackground="{StaticResource PrimaryBrush}"
+            SliderCornerRadius="5"
+            TabHorizontalAlignment="Left"
+            TabWidth="160" />
+
+        <StackPanel
+            Margin="0,0,15,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <ToggleButton
+                Name="toggleBt"
+                Height="30"
+                Margin="0,0,10,0"
+                Padding="15,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{s:Action CreateRoleCMD}"
+                Style="{StaticResource ToggleButtonInfo}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="/Font/#iconfont"
+                        FontSize="16"
+                        Text="&#xe62b;" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="{DynamicResource 新建}" />
+                </StackPanel>
+            </ToggleButton>
+            <Popup
+                x:Name="popup"
+                AllowsTransparency="True"
+                IsOpen="{Binding ElementName=toggleBt, Path=IsChecked}"
+                Placement="Bottom"
+                PlacementTarget="{Binding ElementName=toggleBt}"
+                PopupAnimation="Slide"
+                StaysOpen="False"
+                VerticalOffset="10">
+                <Border
+                    Width="300"
+                    Margin="30"
+                    Background="White"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    Effect="{StaticResource EffectShadow3}">
+                    <Grid>
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{DynamicResource 创建部门}" />
+                        <ToggleButton
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,5,5,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Content="&#xe657;"
+                            FontFamily="/Font/#iconfont"
+                            FontSize="20"
+                            Foreground="{StaticResource DangerBrush}"
+                            IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Popup}, Path=IsOpen}"
+                            Style="{StaticResource ToggleButtonCustom}" />
+                        <Grid Margin="20,50,20,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <hc:TextBox
+                                Grid.Row="0"
+                                Height="25"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                hc:TitleElement.Title="{DynamicResource 部门名称}"
+                                hc:TitleElement.TitlePlacement="Left"
+                                hc:TitleElement.TitleWidth="80"
+                                Text="{Binding EditRole.Name}" />
+                            <hc:TextBox
+                                Grid.Row="1"
+                                Height="25"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                hc:TitleElement.Title="{DynamicResource 对应PLC权限}"
+                                hc:TitleElement.TitlePlacement="Left"
+                                hc:TitleElement.TitleWidth="80"
+                                Text="{Binding EditRole.PlcLevel}" />
+                            <hc:TextBox
+                                Grid.Row="2"
+                                Height="25"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                hc:TitleElement.Title="{DynamicResource 对应MES权限}"
+                                hc:TitleElement.TitlePlacement="Left"
+                                hc:TitleElement.TitleWidth="80"
+                                Text="{Binding EditRole.MESLevel}" />
+                            <Button
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                Command="{s:Action SaveRoleCMD}"
+                                CommandParameter="0"
+                                Content="{DynamicResource 确定}"
+                                Style="{StaticResource ButtonSuccess}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Popup>
+            <ToggleButton
+                x:Name="editRoleToggle"
+                Height="30"
+                Margin="0,0,10,0"
+                Padding="15,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{s:Action EditRoleCMD}"
+                Style="{StaticResource ToggleButtonWarning}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="/Font/#iconfont"
+                        FontSize="16"
+                        Text="&#xe621;" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="{DynamicResource 编辑}" />
+                </StackPanel>
+            </ToggleButton>
+            <Popup
+                AllowsTransparency="True"
+                IsOpen="{Binding ElementName=editRoleToggle, Path=IsChecked}"
+                Placement="Bottom"
+                PlacementTarget="{Binding ElementName=editRoleToggle}"
+                PopupAnimation="Slide"
+                StaysOpen="False"
+                VerticalOffset="10">
+                <Border
+                    Width="300"
+                    Margin="30"
+                    Background="White"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    Effect="{StaticResource EffectShadow3}">
+                    <Grid>
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{DynamicResource 编辑}" />
+                        <ToggleButton
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,5,5,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Content="&#xe657;"
+                            FontFamily="/Font/#iconfont"
+                            FontSize="20"
+                            Foreground="{StaticResource DangerBrush}"
+                            IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Popup}, Path=IsOpen}"
+                            Style="{StaticResource ToggleButtonCustom}" />
+                        <Grid Margin="20,50,20,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <hc:TextBox
+                                Grid.Row="0"
+                                Height="25"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                hc:TitleElement.Title="{DynamicResource 部门名称}"
+                                hc:TitleElement.TitlePlacement="Left"
+                                hc:TitleElement.TitleWidth="80"
+                                Text="{Binding EditRole.Name}" />
+                            <hc:TextBox
+                                Grid.Row="1"
+                                Height="25"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                hc:TitleElement.Title="{DynamicResource 对应PLC权限}"
+                                hc:TitleElement.TitlePlacement="Left"
+                                hc:TitleElement.TitleWidth="80"
+                                Text="{Binding EditRole.PlcLevel}" />
+                            <hc:TextBox
+                                Grid.Row="2"
+                                Height="25"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                hc:TitleElement.Title="{DynamicResource 对应MES权限}"
+                                hc:TitleElement.TitlePlacement="Left"
+                                hc:TitleElement.TitleWidth="80"
+                                Text="{Binding EditRole.MESLevel}" />
+                            <Button
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="0,10"
+                                HorizontalAlignment="Stretch"
+                                Command="{s:Action SaveRoleCMD}"
+                                CommandParameter="1"
+                                Content="{DynamicResource 确定}"
+                                Style="{StaticResource ButtonSuccess}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Popup>
+            <ToggleButton
+                Height="30"
+                Margin="0,0,10,0"
+                Padding="15,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{s:Action DeleteCMD}"
+                Style="{StaticResource ToggleButtonDanger}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="/Font/#iconfont"
+                        FontSize="16"
+                        Text="&#xe648;" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="{DynamicResource 删除}" />
+                </StackPanel>
+            </ToggleButton>
+            <Button
+                Height="30"
+                Margin="0,0,0,0"
+                Padding="15,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{s:Action SaveCMD}"
+                Style="{StaticResource ButtonSuccess}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="/Font/#iconfont"
+                        FontSize="16"
+                        Text="&#xe61b;" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="{DynamicResource 保存}" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Grid Grid.Row="3" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.SelectRole, Converter={StaticResource RoleToBoolConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="{StaticResource MainSpace}" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="{StaticResource MainSpace}" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="{StaticResource MainSpace}" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="{StaticResource MainSpace}" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border
+                Grid.Row="0"
+                Padding="20"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Grid.RowSpan="2"
+                            Width="4"
+                            Height="20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource PrimaryBrush}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            IsEnabled="{Binding RoleCopy.Menus, Converter={StaticResource LevelHighestToBoolConverter}}"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{DynamicResource 菜单}" />
+                        <CheckBox
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Command="{s:Action SelectedAllCMD}"
+                            Content="{DynamicResource 全选}">
+                            <CheckBox.CommandParameter>
+                                <MultiBinding Converter="{StaticResource RoleAndBoolToArrayConverter}">
+                                    <Binding Path="RoleCopy.Menus" />
+                                    <Binding Path="IsChecked" RelativeSource="{RelativeSource Mode=Self}" />
+                                </MultiBinding>
+                            </CheckBox.CommandParameter>
+                        </CheckBox>
+                    </Grid>
+                    <ListBox
+                        x:Name="MenusListBox"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,0,0"
+                        HorizontalContentAlignment="Stretch"
+                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource ListBoxItemConfigStyle}"
+                        ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=local:RoleManagementView}, Path=DataContext.RoleCopy.Menus}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="38" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{tools:ResourceBinding DisplayName}" />
+                                    <CheckBox
+                                        Grid.Column="8"
+                                        HorizontalAlignment="Left"
+                                        Command="{s:Action SelectLevelCMD}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                        IsChecked="{Binding IsSelected}"
+                                        IsEnabled="{Binding EditLevel, Converter={StaticResource LevelHighestToBoolConverter}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+            <Border
+                Grid.Column="2"
+                Padding="20"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Grid.RowSpan="2"
+                            Width="4"
+                            Height="20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource PrimaryBrush}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{DynamicResource 基本参数}" />
+                        <CheckBox
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Command="{s:Action SelectedAllCMD}"
+                            Content="{DynamicResource 全选}">
+                            <CheckBox.CommandParameter>
+                                <MultiBinding Converter="{StaticResource RoleAndBoolToArrayConverter}">
+                                    <Binding Path="RoleCopy.DeviceParameters" />
+                                    <Binding Path="IsChecked" RelativeSource="{RelativeSource Mode=Self}" />
+                                </MultiBinding>
+                            </CheckBox.CommandParameter>
+                        </CheckBox>
+                    </Grid>
+                    <ListBox
+                        x:Name="DeviceParametersListBox"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,0,0"
+                        HorizontalContentAlignment="Stretch"
+                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource ListBoxItemConfigStyle}"
+                        ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=local:RoleManagementView}, Path=DataContext.RoleCopy.DeviceParameters}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="38" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{tools:ResourceBinding DisplayName}" />
+                                    <CheckBox
+                                        Grid.Column="8"
+                                        HorizontalAlignment="Left"
+                                        Command="{s:Action SelectLevelCMD}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                        IsChecked="{Binding IsSelected}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+            <Border
+                Grid.Column="4"
+                Padding="20"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Grid.RowSpan="2"
+                            Width="4"
+                            Height="20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource PrimaryBrush}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{DynamicResource 运行参数}" />
+                        <CheckBox
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Command="{s:Action SelectedAllCMD}"
+                            Content="{DynamicResource 全选}">
+                            <CheckBox.CommandParameter>
+                                <MultiBinding Converter="{StaticResource RoleAndBoolToArrayConverter}">
+                                    <Binding Path="RoleCopy.RunParameters" />
+                                    <Binding Path="IsChecked" RelativeSource="{RelativeSource Mode=Self}" />
+                                </MultiBinding>
+                            </CheckBox.CommandParameter>
+                        </CheckBox>
+                    </Grid>
+                    <ListBox
+                        x:Name="RunParametersListBox"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,0,0"
+                        HorizontalContentAlignment="Stretch"
+                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource ListBoxItemConfigStyle}"
+                        ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=local:RoleManagementView}, Path=DataContext.RoleCopy.RunParameters}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="38" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{tools:ResourceBinding DisplayName}" />
+                                    <CheckBox
+                                        Grid.Column="8"
+                                        HorizontalAlignment="Left"
+                                        Command="{s:Action SelectLevelCMD}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                        IsChecked="{Binding IsSelected}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+            <Border
+                Grid.Column="6"
+                Padding="20"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Grid.RowSpan="2"
+                            Width="4"
+                            Height="20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource PrimaryBrush}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{DynamicResource 功能启用}" />
+                        <CheckBox
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Command="{s:Action SelectedAllCMD}"
+                            Content="{DynamicResource 全选}">
+                            <CheckBox.CommandParameter>
+                                <MultiBinding Converter="{StaticResource RoleAndBoolToArrayConverter}">
+                                    <Binding Path="RoleCopy.FunctionEnables" />
+                                    <Binding Path="IsChecked" RelativeSource="{RelativeSource Mode=Self}" />
+                                </MultiBinding>
+                            </CheckBox.CommandParameter>
+                        </CheckBox>
+                    </Grid>
+                    <ListBox
+                        x:Name="FunctionEnablesListBox"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,0,0"
+                        HorizontalContentAlignment="Stretch"
+                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource ListBoxItemConfigStyle}"
+                        ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=local:RoleManagementView}, Path=DataContext.RoleCopy.FunctionEnables}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="38" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{tools:ResourceBinding DisplayName}" />
+                                    <CheckBox
+                                        Grid.Column="8"
+                                        HorizontalAlignment="Left"
+                                        Command="{s:Action SelectLevelCMD}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                        IsChecked="{Binding IsSelected}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+            <Border
+                Grid.Column="8"
+                Padding="20"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="{DynamicResource MainCornerRadius}">
+                <Grid Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Grid.RowSpan="2"
+                            Width="4"
+                            Height="20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource PrimaryBrush}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Style="{StaticResource TextBlockSubTitle}"
+                            Text="{DynamicResource 高级设置}" />
+                        <CheckBox
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Command="{s:Action SelectedAllCMD}"
+                            Content="{DynamicResource 全选}">
+                            <CheckBox.CommandParameter>
+                                <MultiBinding Converter="{StaticResource RoleAndBoolToArrayConverter}">
+                                    <Binding Path="RoleCopy.AdvancedConfigs" />
+                                    <Binding Path="IsChecked" RelativeSource="{RelativeSource Mode=Self}" />
+                                </MultiBinding>
+                            </CheckBox.CommandParameter>
+                        </CheckBox>
+                    </Grid>
+                    <ListBox
+                        x:Name="AdvancedConfigsListBox"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,0,0"
+                        HorizontalContentAlignment="Stretch"
+                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource ListBoxItemConfigStyle}"
+                        ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=local:RoleManagementView}, Path=DataContext.RoleCopy.AdvancedConfigs}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="38" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{tools:ResourceBinding DisplayName}" />
+                                    <CheckBox
+                                        Grid.Column="8"
+                                        HorizontalAlignment="Left"
+                                        Command="{s:Action SelectLevelCMD}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                        IsChecked="{Binding IsSelected}"
+                                        IsEnabled="{Binding EditLevel, Converter={StaticResource LevelHighestToBoolConverter}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

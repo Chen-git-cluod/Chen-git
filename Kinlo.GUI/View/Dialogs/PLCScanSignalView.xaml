@@ -1,0 +1,209 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.PLCScanSignalView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Title="{Binding Title}"
+    Width="1200"
+    Height="809"
+    d:DataContext="{d:DesignInstance vm:PLCScanSignalViewModel}"
+    Background="{DynamicResource RegionBrush}"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+>
+    <Window.Resources>
+        <GridLength x:Key="TitleWidth">90</GridLength>
+        <GridLength x:Key="SignalSpace">15</GridLength>
+    </Window.Resources>
+    <Grid Margin="{StaticResource ControlPadding}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="{StaticResource SignalSpace}" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="{StaticResource SignalSpace}" />
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{DynamicResource 触发地址列表}" />
+            <Button
+                Grid.Row="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="{s:Action InputStartTagsCMD}"
+                Content="{DynamicResource 导入触发标签}"
+                Style="{StaticResource ButtonPrimary}"
+            />
+            <ListView
+                Grid.Row="1"
+                Padding="0"
+                HorizontalAlignment="Stretch"
+                Background="Transparent"
+                ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+                ItemsSource="{Binding PLCScanSignalCopy.StartSignas}"
+            >
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn DisplayMemberBinding="{Binding Index}" Header="{DynamicResource 索引}" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Tag.Lable}" Header="{DynamicResource 标签}" />
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{DynamicResource 切除地址列表}" />
+            <Button
+                Grid.Row="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="{s:Action InputResectionsCMD}"
+                Content="{DynamicResource 导入切除标签}"
+                Style="{StaticResource ButtonPrimary}"
+            />
+            <ListView
+                Grid.Row="1"
+                Padding="0"
+                HorizontalAlignment="Stretch"
+                Background="Transparent"
+                ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+                ItemsSource="{Binding PLCScanSignalCopy.PLCResections}"
+            >
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn DisplayMemberBinding="{Binding Index}" Header="{DynamicResource 索引}" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Tag.Lable}" Header="{DynamicResource 标签}" />
+                            <GridViewColumn Header="{DynamicResource 启用}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding IsEnabled}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+        <Grid Grid.Column="4" Margin="0,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="1" Padding="20,10" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="5">
+                <UniformGrid Grid.Row="1" Grid.Column="4" Height="360" VerticalAlignment="Top" Columns="1">
+                    <hc:TextBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 服务名：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        Text="{Binding PLCScanSignalCopy.ServiceName}"
+                    />
+                    <hc:ComboBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 设备通信类型：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        ItemsSource="{Binding Source={StaticResource CommunicationEnum}}"
+                        SelectedValue="{Binding PLCScanSignalCopy.DeviceCommunicationType}"
+                    />
+                    <hc:ComboBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 寻址方式：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        Text="{Binding PLCScanSignalCopy.AddressingMethod, Mode=TwoWay}"
+                    >
+                        <hc:ComboBox.Items>
+                            <ComboBoxItem Content="字" />
+                            <ComboBoxItem Content="字节" />
+                        </hc:ComboBox.Items>
+                    </hc:ComboBox>
+
+                    <hc:TextBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 心跳标签：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        Text="{Binding PLCScanSignalCopy.Heartbeat.Lable}"
+                        ToolTip="{Binding PLCScanSignalCopy.Heartbeat.Address}"
+                    />
+                    <hc:TextBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 心跳时间(ms)：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        Text="{Binding PLCScanSignalCopy.HeartbeatIntervalMs}"
+                    />
+                    <hc:TextBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 状态标签：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        Text="{Binding PLCScanSignalCopy.Status.Lable}"
+                        ToolTip="{Binding PLCScanSignalCopy.Status.Address}"
+                    />
+                    <hc:TextBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 起始标签：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        IsReadOnly="True"
+                        Text="{Binding PLCScanSignalCopy.AddressStart.Lable}"
+                        ToolTip="{Binding PLCScanSignalCopy.AddressStart.Address}"
+                    />
+                    <hc:TextBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 信号长度：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        IsReadOnly="True"
+                        Text="{Binding PLCScanSignalCopy.LengthSignal, Mode=TwoWay}"
+                    />
+                    <hc:TextBox
+                        Height="25"
+                        VerticalAlignment="Bottom"
+                        hc:TitleElement.Title="{DynamicResource 切除长度：}"
+                        hc:TitleElement.TitlePlacement="Left"
+                        hc:TitleElement.TitleWidth="{StaticResource TitleWidth}"
+                        IsReadOnly="True"
+                        Text="{Binding PLCScanSignalCopy.LengthResection, Mode=TwoWay}"
+                    />
+                </UniformGrid>
+            </Border>
+            <Button
+                Grid.Row="0"
+                Grid.ColumnSpan="5"
+                Width="120"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="{s:Action ConfirmCMD}"
+                Content="{StaticResource 保存}"
+                Style="{StaticResource ButtonSuccess}"
+            />
+        </Grid>
+    </Grid>
+</Window>

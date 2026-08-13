@@ -1,0 +1,40 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.ManualTrayLoadingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    Title="{DynamicResource 手工组盘出站}"
+    Width="500"
+    Height="800"
+    mc:Ignorable="d"
+>
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <hc:TextBox hc:TitleElement.Title="{DynamicResource 托盘号}" hc:TitleElement.TitlePlacement="Left" Text="{Binding TrayCode}" />
+        <Button Grid.Column="1" Margin="5,0,0,0" Command="{s:Action OutboundCmd}" Content="{DynamicResource 出站}" Style="{StaticResource ButtonSuccess}" />
+        <hc:TextBox
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Margin="0,30,0,0"
+            Padding="5"
+            VerticalContentAlignment="Top"
+            hc:TitleElement.Title="{DynamicResource 条码}"
+            AcceptsReturn="True"
+            Text="{Binding Barcodes}"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+        />
+    </Grid>
+</Window>

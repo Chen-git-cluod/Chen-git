@@ -1,0 +1,185 @@
+﻿<Window
+   x:Class="Kinlo.GUI.View.TrayCupShowDetailDialog"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:local="clr-namespace:Kinlo.GUI.View"
+   xmlns:kc="clr-namespace:KinloControls;assembly=KinloControls"
+   xmlns:hc="https://handyorg.github.io/handycontrol"
+   xmlns:cvt="clr-namespace:Kinlo.Common.Converters;assembly=Kinlo.Common"
+   mc:Ignorable="d"
+   Title="注液详情"
+   Height="800"
+   Width="1000"
+   DataContext="{Binding RelativeSource={RelativeSource Self}}"
+>
+   <Window.Resources>
+      <cvt:IntToResultConverter x:Key="IntToResultConverter" />
+      <cvt:ResultToBrushConverter x:Key="ResultToBrushConverter" />
+   </Window.Resources>
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="auto" />
+         <RowDefinition Height="auto" />
+         <RowDefinition />
+      </Grid.RowDefinitions>
+      <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0 0 0 1" />
+      <WrapPanel Margin="20">
+         <TextBlock VerticalAlignment="Center" kc:LanguageResource.Key="选择注液结果：" />
+         <hc:CheckComboBox
+            x:Name="injCmb"
+            MinWidth="200"
+            ShowSelectAllButton="True"
+            ItemsSource="{Binding InjectResults}"
+         />
+         <TextBlock Margin="20 0 0 0" VerticalAlignment="Center" kc:LanguageResource.Key="选择测漏结果：" />
+         <hc:CheckComboBox
+            x:Name="leakCmb"
+            MinWidth="200"
+            ShowSelectAllButton="True"
+            ItemsSource="{Binding LeakResults}"
+         />
+         <Button
+            Style="{StaticResource ButtonSuccess}"
+            Margin="20 0 0 0"
+            MinWidth="80"
+            kc:LanguageResource.Key="应用"
+            Click="Button_Click"
+         />
+      </WrapPanel>
+      <WrapPanel Margin="20 0 0 5" Grid.Row="1">
+         <TextBlock kc:LanguageResource.Key="电池总数" Style="{StaticResource TextBlockSubTitleBold}" />
+         <TextBlock
+            Foreground="{StaticResource PrimaryBrush}"
+            Margin="10 0 0 0"
+            VerticalAlignment="Center"
+            Text="{Binding TotalInfo}"
+         />
+         <TextBlock
+            Margin="30 0 0 0"
+            kc:LanguageResource.Key="注液统计"
+            Style="{StaticResource TextBlockSubTitleBold}"
+         />
+         <TextBlock
+            Foreground="{StaticResource PrimaryBrush}"
+            Margin="10 0 0 0"
+            VerticalAlignment="Center"
+            Text="{Binding InjInfo}"
+         />
+         <TextBlock
+            Margin="30 0 0 0"
+            kc:LanguageResource.Key="测漏统计"
+            Style="{StaticResource TextBlockSubTitleBold}"
+         />
+         <TextBlock
+            Foreground="{StaticResource PrimaryBrush}"
+            Margin="10 0 0 0"
+            VerticalAlignment="Center"
+            Text="{Binding LeakInfo}"
+         />
+      </WrapPanel>
+      <ListView
+         Grid.Row="2"
+         Background="Transparent"
+         BorderThickness="0"
+         ItemContainerStyle="{StaticResource MainDisplayListViewItemStyle}"
+         ItemsSource="{Binding InjectDisplays}"
+      >
+         <ListView.View>
+            <GridView>
+               <GridViewColumn Width="Auto" Header="{DynamicResource 条码}">
+                  <GridViewColumn.CellTemplate>
+                     <DataTemplate>
+                        <TextBox
+                           MinWidth="220"
+                           hc:BorderElement.CornerRadius="5"
+                           BorderThickness="0"
+                           VerticalContentAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0"
+                           Padding="5 0"
+                           Text="{Binding Barcode, Mode=OneWay}"
+                           IsReadOnly="True"
+                        />
+                     </DataTemplate>
+                  </GridViewColumn.CellTemplate>
+               </GridViewColumn>
+               <GridViewColumn Width="Auto" Header="{DynamicResource 首注结果}">
+                  <GridViewColumn.CellTemplate>
+                     <DataTemplate>
+                        <Grid>
+                           <Border
+                              CornerRadius="5"
+                              Background="{Binding FirstInjectResult, Converter={StaticResource ResultToBrushConverter}}"
+                           >
+                              <TextBlock
+                                 Foreground="White"
+                                 Margin="8 3"
+                                 HorizontalAlignment="Center"
+                                 Text="{Binding FirstInjectResult,Converter={StaticResource IntToResultConverter}, Mode=OneWay}"
+                              />
+                           </Border>
+                        </Grid>
+                     </DataTemplate>
+                  </GridViewColumn.CellTemplate>
+               </GridViewColumn>
+               <GridViewColumn Width="Auto" Header="{DynamicResource 测漏结果}">
+                  <GridViewColumn.CellTemplate>
+                     <DataTemplate>
+                        <Grid>
+                           <Border
+                              CornerRadius="5"
+                              Background="{Binding LeakResult, Converter={StaticResource ResultToBrushConverter}}"
+                           >
+                              <TextBlock
+                                 Foreground="White"
+                                 Margin="8 3"
+                                 HorizontalAlignment="Center"
+                                 Text="{Binding LeakResult,Converter={StaticResource IntToResultConverter}, Mode=OneWay}"
+                              />
+                           </Border>
+                        </Grid>
+                     </DataTemplate>
+                  </GridViewColumn.CellTemplate>
+               </GridViewColumn>
+               <GridViewColumn
+                  Width="Auto"
+                  DisplayMemberBinding="{Binding TargetInjectionVolume,StringFormat={}{0:0.###}, Mode=OneWay}"
+                  Header="{DynamicResource 首注目标量}"
+               />
+               <GridViewColumn
+                  Width="Auto"
+                  DisplayMemberBinding="{Binding ActualInjectionVolume,StringFormat={}{0:0.###}, Mode=OneWay}"
+                  Header="{DynamicResource 首注实注量}"
+               />
+               <GridViewColumn
+                  Width="Auto"
+                  DisplayMemberBinding="{Binding TargetInjectionVolumeDeviation,StringFormat={}{0:0.###}, Mode=OneWay}"
+                  Header="{DynamicResource 首注偏差}"
+               />
+               <GridViewColumn
+                  Width="Auto"
+                  DisplayMemberBinding="{Binding LineIndex, Mode=OneWay}"
+                  Header="{DynamicResource 行号}"
+               />
+               <GridViewColumn
+                  Width="Auto"
+                  DisplayMemberBinding="{Binding ColumnIndex, Mode=OneWay}"
+                  Header="{DynamicResource 列号}"
+               />
+               <GridViewColumn
+                  Width="Auto"
+                  DisplayMemberBinding="{Binding TrayCode, Mode=OneWay}"
+                  Header="{DynamicResource 托盘号}"
+               />
+               <GridViewColumn
+                  Width="Auto"
+                  DisplayMemberBinding="{Binding CupCode, Mode=OneWay}"
+                  Header="{DynamicResource 套杯号}"
+               />
+            </GridView>
+         </ListView.View>
+      </ListView>
+   </Grid>
+</Window>

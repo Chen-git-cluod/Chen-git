@@ -1,0 +1,67 @@
+﻿<Window
+    x:Class="Kinlo.GUI.View.WorkOrderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Kinlo.GUI.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:vm="clr-namespace:Kinlo.GUI.ViewModel"
+    Title="{DynamicResource 工单获取}"
+    MinWidth="800"
+    MinHeight="300"
+    d:DataContext="{d:DesignInstance vm:WorkOrderViewModel}"
+    Background="{DynamicResource RegionBrush}"
+    SizeToContent="WidthAndHeight"
+    mc:Ignorable="d"
+>
+    <StackPanel Margin="30,10,30,30">
+        <Button
+            Width="100"
+            Margin="0,10,0,20"
+            HorizontalAlignment="Right"
+            Command="{s:Action GetCmd}"
+            Content="{DynamicResource 获取}"
+            IsEnabled="{Binding IsSendFinish}"
+            Style="{StaticResource ButtonPrimary}"
+        />
+
+        <ListView ItemsSource="{Binding WorkOrdersCode}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding}" Header="{DynamicResource 工单号}" />
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Width="80"
+                                    Command="{s:Action SelectCmd}"
+                                    CommandParameter="{Binding .}"
+                                    Content="选择"
+                                    Style="{StaticResource ButtonSuccess}"
+                                />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView Margin="0,10,0,0" ItemsSource="{Binding WorkOrders}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding result}" Header="{DynamicResource 状态}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding message}" Header="{DynamicResource 信息描述}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding shop_order}" Header="{DynamicResource 工单}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding tech_no}" Header="{DynamicResource 型号}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding item_no}" Header="{DynamicResource 料号}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding qty_order}" Header="{DynamicResource 工单数}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding qty_over}" Header="{DynamicResource 超产数}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding qty_sfc}" Header="{DynamicResource 生产数}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding qty_left}" Header="剩余数" />
+                    <GridViewColumn DisplayMemberBinding="{Binding standard}" Header="工艺标准" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </StackPanel>
+</Window>
